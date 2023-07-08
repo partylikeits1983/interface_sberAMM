@@ -153,8 +153,8 @@ export default function ChallengeForm() {
 
               <Slider
                 min={0}
-                max={604800}
-                step={1}
+                max={25}
+                step={0.1}
                 value={formInputs.timePerMove}
                 onChange={handleSliderChange}
                 defaultValue={formInputs.timePerMove}
@@ -164,7 +164,7 @@ export default function ChallengeForm() {
                 </SliderTrack>
                 <SliderThumb />
               </Slider>
-              <p>{convertSecondsToTime(formInputs.timePerMove)}</p>
+              <p>{formInputs.timePerMove}</p>
             </FormControl>
 
             <HStack spacing="4">
