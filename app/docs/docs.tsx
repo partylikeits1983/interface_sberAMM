@@ -145,10 +145,10 @@ export default function Docs() {
             color="green.500"
             fontWeight="bold"
             onClick={() => {
-              window.open('https://docs.chess.fish', '_blank');
+              window.open('https://github.com/partylikeits1983/sberAMM', '_blank');
             }}
           >
-            <i style={{ color: 'green.500' }}>docs.chess.fish</i>
+            <i style={{ color: 'green.500' }}>github.com/partylikeits1983/sberAMM</i>
           </Link>
         </Box>
         <Box mt={2}>
