@@ -130,7 +130,7 @@ export default function Docs() {
         <Box mb={2}>
           <img
             ref={imgRef}
-            src="/chessDark__50.png"
+            src="/sberAMM.png"
             alt="Placeholder Image"
             width={500}
             height={500}
