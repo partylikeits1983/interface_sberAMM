@@ -32,8 +32,8 @@ export default function NetworkButton(): JSX.Element {
       case 'Mumbai':
         chainId = '0x13881';
         break;
-      case 'kovan':
-        chainId = '0x2a';
+      case 'Siberium':
+        chainId = '0x1b198';
         break;
       case 'Alphajores Testnet':
         chainId = '0xaef3';

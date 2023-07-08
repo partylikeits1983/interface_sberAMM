@@ -64,7 +64,7 @@ export default function Docs() {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: '0x89',
+              chainId: '0x13881',
               chainName: 'Polygon Mumbai',
               rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
               nativeCurrency: {
@@ -88,6 +88,41 @@ export default function Docs() {
       );
     }
   };
+
+  const addSiberiumNetwork = async () => {
+    const provider = (window as any).ethereum;
+
+    if (provider) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x1b198',
+              chainName: 'Siberium',
+              rpcUrls: ['https://rpc.test.siberium.net'],
+              nativeCurrency: {
+                name: 'Siberium',
+                symbol: 'SBER',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://explorer.test.siberium.net/'],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error(
+          'An error occurred while trying to switch to the Polygon Mumbai network:',
+          error,
+        );
+      }
+    } else {
+      console.log(
+        'MetaMask is not installed. Please consider installing it: https://metamask.io/download.html',
+      );
+    }
+  };
+
 
   return (
     <ChakraProvider>
@@ -243,6 +278,72 @@ export default function Docs() {
             </Flex>
           </Box>
         </Flex>
+
+
+        <Flex
+          justifyContent="center"
+          mt={4}
+          flexDirection={'row'}
+          align="center"
+        >
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            width="390px"
+            mr={5}
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              addSiberiumNetwork();
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Box display="flex" alignItems="center">
+                <Image
+                  src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+                  width="24px"
+                  height="24px"
+                />
+                <Text ml={3}>Add Siberium Testnet to Metamask</Text>
+              </Box>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+
+          <Box
+            p={6}
+            bgColor="#08131c"
+            color="white"
+            borderRadius="md"
+            cursor="pointer"
+            borderColor="white"
+            borderWidth={0.5}
+            width="250px"
+            _hover={{
+              bgColor: 'gray.700',
+              borderColor: 'white',
+            }}
+            onClick={() => {
+              window.open('https://explorer.test.siberium.net/', '_blank');
+            }}
+          >
+            <Flex justify="space-between" align="center">
+              <Text>Siberium Testnet Faucet</Text>
+              <ChevronRightIcon boxSize={6} />
+            </Flex>
+          </Box>
+        </Flex>
+
+
+
+        
       </Flex>
     </ChakraProvider>
   );
