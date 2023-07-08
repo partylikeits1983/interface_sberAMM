@@ -176,7 +176,7 @@ export const AcceptWagerAndApprove = async (wagerAddress: string) => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
 
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
@@ -223,10 +223,10 @@ export const CheckValidMove = async (moves: string[]) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   const verifier = new ethers.Contract(
     VerificationAddress,
-    moveVerificationABI,
+    AMM_ABI,
     signer,
   );
 
@@ -259,7 +259,7 @@ export const CreateWager = async (form: CreateMatchType) => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     const player1 = form.player1.toString();
     const wagerToken = form.wagerToken.toString();
@@ -302,7 +302,7 @@ export const GetAllWagers = async (): Promise<Card[]> => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     const wagers = await chess.getAllUserGames(accounts[0]);
 
@@ -354,7 +354,7 @@ export const GetAllWagersForPairing = async () => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     // const totalWagerCount = Number(await chess.getAllWagersCount());
 
@@ -400,7 +400,7 @@ export const GetAllWagersForPairing = async () => {
 
 export const GetWagerData = async (wagerAddress: string): Promise<Card> => {
   let { provider } = await setupProvider();
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, provider);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, provider);
 
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
@@ -446,7 +446,7 @@ export const PlayMove = async (
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     const hex_move = await chess.moveToHex(move);
 
@@ -470,7 +470,7 @@ export const PayoutWager = async (wagerAddress: string) => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     await chess.payoutWager(wagerAddress);
 
@@ -488,7 +488,7 @@ export const CancelWager = async (wagerAddress: string) => {
   const signer = provider.getSigner();
   const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     await chess.cancelWager(wagerAddress);
 
@@ -505,7 +505,7 @@ export const IsPlayerWhite = async (wagerAddress: string): Promise<boolean> => {
   await updateContractAddresses();
 
   if (isWalletConnected) {
-    const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+    const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
     try {
       console.log('In Is Player White');
       console.log(wagerAddress);
@@ -537,7 +537,7 @@ export const IsPlayerAddressWhite = async (
 
   await updateContractAddresses();
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     console.log('In Is Player White');
     console.log(wagerAddress);
@@ -563,7 +563,7 @@ export const GetPlayerTurn = async (wagerAddress: string): Promise<boolean> => {
 
   await updateContractAddresses();
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
 
   if (isWalletConnected) {
     try {
@@ -598,7 +598,7 @@ export const GetNumberOfGames = async (
 
   await updateContractAddresses();
 
-  const chess = new ethers.Contract(ChessAddress, chessWagerABI, signer);
+  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
   try {
     const wagerParams = await chess.gameWagers(wagerAddress);
     const numberOfGames = parseInt(wagerParams[4]);

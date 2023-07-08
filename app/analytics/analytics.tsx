@@ -1,6 +1,5 @@
 'use client';
 
-import { GetAnalyticsData } from 'ui/wallet-ui/api/form';
 import { GetWagersDB } from 'ui/wallet-ui/api/db-api';
 
 import {
@@ -43,16 +42,6 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     const fetchData = async () => {
       if (!useAPI) {
         try {
-          const [fetchedWagerAddresses, totalGames] = await GetAnalyticsData();
-
-          setWagerAddresses(fetchedWagerAddresses);
-
-          console.log(fetchedWagerAddresses);
-          console.log(totalGames);
-
-          setTotalGames(totalGames);
-          setTotalWagers(fetchedWagerAddresses.length.toString());
-
           setLoading(false);
         } catch (error) {
           console.log(error);
