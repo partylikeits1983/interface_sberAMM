@@ -94,29 +94,6 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       </StatGroup>
 
       <Box overflowX="auto" maxWidth="100%">
-        <Table variant="simple" mt={4} size="sm">
-          <thead>
-            <Tr>
-              <Th color="white">#</Th>
-              <Th color="white">Wager Addresses</Th>
-            </Tr>
-          </thead>
-          <tbody>
-            {wagerAddresses.map((address, index) => (
-              <Tr key={index}>
-                <Td color="green.400">{index + 1}</Td>
-                <Td>
-                  <Link
-                    color="green.400"
-                    onClick={() => router.push(`/game/${address}`)}
-                  >
-                    {address}
-                  </Link>
-                </Td>
-              </Tr>
-            ))}
-          </tbody>
-        </Table>
       </Box>
     </ChakraProvider>
   );
