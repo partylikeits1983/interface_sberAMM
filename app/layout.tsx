@@ -10,7 +10,7 @@ import SelectNetworkButton from 'ui/wallet-ui/select-network-button';
 export const metadata: Metadata = {
   title: {
     default: 'Sberbank AMM',
-    template: '%s | Chess.fish',
+    template: '%s | SberAMM',
   },
   description: 'Sberbank AMM router',
 };
