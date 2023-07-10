@@ -2,7 +2,7 @@ const ethers = require('ethers');
 const { parseUnits } = require('ethers/lib/utils');
 import { CreateMatchType } from './types';
 
-const AMM_ABI = require('../../../contract-abi/SberAMM-ABI.json');
+const AMM_ABI = require('../../../contract-abi/SberAMM.json');
 
 import alertWarningFeedback from '#/ui/alertWarningFeedback';
 import alertSuccessFeedback from '#/ui/alertSuccessFeedback';

@@ -2,7 +2,7 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Create-Challenge',
+  title: 'Implement Swap',
 };
 
 export default async function Layout({

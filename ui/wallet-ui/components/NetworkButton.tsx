@@ -10,6 +10,7 @@ const NETWORK_NAMES: { [key: string]: string } = {
   0x13881: 'Mumbai',
   0x2a: 'Kovan',
   0xaef3: 'Alfajores Testnet',
+  0x1b198: 'Siberium', 
 };
 
 export default function NetworkButton(): JSX.Element {

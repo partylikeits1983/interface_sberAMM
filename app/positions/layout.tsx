@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Game',
+  title: 'Liquidity Positions',
 };
 
 const items = [
