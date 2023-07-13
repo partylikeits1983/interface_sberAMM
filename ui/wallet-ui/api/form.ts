@@ -212,3 +212,40 @@ export const GetPoolData = async () => {
   }
 };
 
+
+export const DepositLiquidity = async (token0Address: string, token0Amount: number, token1Address: string, token1Amount: number, fee: number, isStable: boolean) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
+
+  const PID = await SberAMM.getPool(token0Address, token1Address, fee);
+
+  console.log(PID);
+
+
+  try {
+
+    if (PID == 0) {
+      // create pair because it doesn't exist
+      const newPID = await SberAMM.createPair(token0Address, token1Address, fee, isStable);
+      await SberAMM.deposit(newPID, token0Amount, token1Amount);
+
+    } else {
+
+      await SberAMM.deposit(PID, token0Amount, token1Amount);
+    }
+
+
+    return {
+      status: true
+    };
+  } catch (error) {
+    return {
+      status: false
+    };
+  }
+};
+

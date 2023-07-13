@@ -19,6 +19,11 @@ export const demos: { name: string; items: Item[] }[] = [
         description: 'Swap tokens',
       },
       {
+        name: 'Add Lquidity',
+        slug: 'deposit',
+        description: 'Add Liquidity',
+      },
+      {
         name: 'Liquidity Positions',
         slug: 'positions',
         description: 'View your open positions',

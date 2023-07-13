@@ -103,7 +103,7 @@ const CardList = () => {
     <ChakraProvider>
       <Box>
         <Heading as="h2" size="lg" mb={4}>
-          Your open liquidity positions
+          Liquidity positions
         </Heading>
         <CardFilterControls
           sortValue={sortValue}
@@ -121,7 +121,7 @@ const CardList = () => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            You haven&apos;t created any matches yet.
+            You haven&apos;t created any liquidity positions yet.
           </Text>
         )}
       </Box>
