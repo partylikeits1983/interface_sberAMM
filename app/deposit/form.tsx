@@ -40,7 +40,7 @@ interface FormInputs {
 
 export default function ChallengeForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
-  const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
+  const [isLoadingDepositLiquidity, setIsLoadingDepositLiquidity] = useState(false);
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
@@ -49,11 +49,11 @@ export default function ChallengeForm() {
     setIsLoadingApproval(false);
   };
 
-  const HandleClickCreateWager = async () => {
+  const HandleClickDepositLiquidity = async () => {
     console.log(formInputs);
-    setIsLoadingCreateWager(true);
+    setIsLoadingDepositLiquidity(true);
     await DepositLiquidity(formInputs);
-    setIsLoadingCreateWager(false);
+    setIsLoadingDepositLiquidity(false);
   };
 
   const [formInputs, setFormInputs] = useState<FormInputs>({
@@ -214,13 +214,13 @@ useEffect(() => {
                 variant="solid"
                 size="lg"
                 loadingText="Submitting Transaction"
-                onClick={() => HandleClickCreateWager()}
+                onClick={() => HandleClickDepositLiquidity()}
                 _hover={{
                   color: '#000000',
                   backgroundColor: '#62ffa2',
                 }}
               >
-                Swap Tokens
+                Add Liquidity
                 <div
                   style={{
                     display: 'inline-block',
@@ -229,7 +229,7 @@ useEffect(() => {
                     marginLeft: '8px',
                   }}
                 >
-                  {isLoadingCreateWager ? (
+                  {isLoadingDepositLiquidity ? (
                     <Spinner
                       thickness="2px"
                       speed="0.85s"

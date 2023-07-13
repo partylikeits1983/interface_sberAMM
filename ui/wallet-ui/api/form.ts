@@ -212,8 +212,16 @@ export const GetPoolData = async () => {
   }
 };
 
+interface FormInputs {
+  token0: string;
+  token1: string;
+  amount0: number;
+  amount1: number;
+  fee: number;
+  isStable: boolean;
+}
 
-export const DepositLiquidity = async (token0Address: string, token0Amount: number, token1Address: string, token1Amount: number, fee: number, isStable: boolean) => {
+export const DepositLiquidity = async (inputs: FormInputs) => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -221,21 +229,25 @@ export const DepositLiquidity = async (token0Address: string, token0Amount: numb
 
   const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
 
-  const PID = await SberAMM.getPool(token0Address, token1Address, fee);
+  console.log("HERE")
+  console.log(inputs.token0);
+  console.log(inputs.token1);
+  console.log(inputs.fee);
+  const PID = await SberAMM.getPool(inputs.token0, inputs.token1, inputs.fee);
 
   console.log(PID);
-
+  alert(PID)
 
   try {
 
     if (PID == 0) {
       // create pair because it doesn't exist
-      const newPID = await SberAMM.createPair(token0Address, token1Address, fee, isStable);
-      await SberAMM.deposit(newPID, token0Amount, token1Amount);
+      const newPID = await SberAMM.createPair(inputs.token0, inputs.token1, inputs.fee, inputs.isStable);
+      await SberAMM.deposit(newPID, inputs.amount0, inputs.amount1);
 
     } else {
 
-      await SberAMM.deposit(PID, token0Amount, token1Amount);
+      await SberAMM.deposit(PID, inputs.amount0, inputs.amount1);
     }
 
 
