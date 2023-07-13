@@ -13,34 +13,30 @@ interface ContractAddress {
   network: string;
   chainID: number;
   owner: string;
-  token: string;
-  chessToken: string;
-  moveVerification: string;
-  chess: string;
+  dividendToken: string;
+  splitter: string;
+  AMM: string;
 }
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
+interface PoolData {
+  token0: string;
+  token1: string;
+  amount0: number;
+  amount1: number;
+  totalShares: number;
+  isStable: boolean;
+  fee0: number;
+  fee1: number;
+  feeRate: number;
 }
 
 const data: ContractAddress = require('./contractAddresses.json');
 const jsonString = JSON.stringify(data); // Convert the object to JSON string
 const addresses = JSON.parse(jsonString); // Parse the JSON string
 
-let ChessAddress = addresses[0].chess;
-let VerificationAddress = addresses[0].moveVerification;
-let tokenAddress = addresses[0].token;
+let SberAMMaddress = addresses[0].AMM;
+let DividendPayingERC20address = addresses[0].dividendToken;
+let SplitterAddress = addresses[0].splitter;
 
 const ERC20ABI = [
   'function transferFrom(address from, address to, uint value)',
@@ -67,12 +63,12 @@ const updateContractAddresses = async (): Promise<void> => {
   );
 
   if (matchingChain) {
-    const { chess, moveVerification, token } = matchingChain;
+    const { AMM, dividendToken, splitter } = matchingChain;
 
     // Update the addresses based on the matching chain ID
-    ChessAddress = chess;
-    VerificationAddress = moveVerification;
-    tokenAddress = token;
+    SberAMMaddress = AMM;
+    DividendPayingERC20address = dividendToken;
+    SplitterAddress = splitter;
   }
   // Add more chains if needed.
 };
@@ -119,7 +115,7 @@ export const getBalance = async (address: string) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  const token = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+  const token = new ethers.Contract(address, ERC20ABI, signer);
 
   try {
     const value = await token.balanceOf(address);
@@ -150,8 +146,8 @@ export const Approve = async (tokenAddress: string, amount: number) => {
 
   try {
     // @dev amount.toSting() was a nightmare bug to find...
-    const value = await token.approve(ChessAddress, amount.toString());
-    const allowance = await token.allowance(accounts[0], ChessAddress);
+    const value = await token.approve(SberAMMaddress, amount.toString());
+    const allowance = await token.allowance(accounts[0], SberAMMaddress);
 
     alert('Success! allowance set: ' + allowance);
 
@@ -169,231 +165,50 @@ export const Approve = async (tokenAddress: string, amount: number) => {
   }
 };
 
-export const AcceptWagerAndApprove = async (wagerAddress: string) => {
+export const GetPoolData = async () => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
+  // const accounts = await provider.send('eth_requestAccounts', []);
 
-  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
+  const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
 
-  try {
-    const wagerParams = await chess.gameWagers(wagerAddress);
-
-    const card: Card = {
-      matchAddress: wagerAddress,
-      player0Address: wagerParams[0],
-      player1Address: wagerParams[1],
-      wagerToken: wagerParams[2],
-      wagerAmount: parseInt(wagerParams[3]),
-      numberOfGames: parseInt(wagerParams[4]),
-      isInProgress: wagerParams[5],
-      timeLimit: parseInt(wagerParams[6]),
-      timeLastMove: parseInt(wagerParams[7]),
-      timePlayer0: parseInt(wagerParams[8]),
-      timePlayer1: parseInt(wagerParams[9]),
-      isPlayerTurn: false,
-    };
-
-    const token = new ethers.Contract(card.wagerToken, ERC20ABI, signer);
-
-    const value = await token.approve(ChessAddress, wagerParams[3].toString());
-    const allowance = await token.allowance(accounts[0], ChessAddress);
-
-    // alert('success' + allowance);
-
-    return {
-      value: value,
-      success: true,
-      status: '✅ Check out your transaction on Etherscan',
-    };
-  } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore
-      status: '😥 Something went wrong: ' + error.message,
-    };
-  }
-};
-
-export const CheckValidMove = async (moves: string[]) => {
-  await updateContractAddresses();
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-
-  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
-  const verifier = new ethers.Contract(
-    VerificationAddress,
-    AMM_ABI,
-    signer,
-  );
+  const AllPoolData: PoolData[] = [];
 
   try {
-    let hexMoves = [];
-    for (let i = 0; i < moves.length; i++) {
-      hexMoves[i] = await chess.moveToHex(moves[i]);
-    }
+    const PIDs = await SberAMM.PIDs();
 
-    const tx = await verifier.checkGameFromStart(hexMoves);
+    // const AllPoolData: PoolData[] = [];
 
-    return {
-      value: tx,
-      success: true,
-      status: '✅ Check out your transaction on Etherscan',
-    };
-  } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore
-      status: '😥 Something went wrong: ' + error.message,
-    };
-  }
-};
+    for (let i = 1; i < PIDs; i++) {
 
-export const CreateWager = async (form: CreateMatchType) => {
-  await updateContractAddresses();
+      const data = await SberAMM.Pools(i);
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
-  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
-  try {
-    const player1 = form.player1.toString();
-    const wagerToken = form.wagerToken.toString();
-    let wager = ethers.utils.parseEther(form.wagerAmount.toString());
-    let maxTimePerMove = Number(form.timePerMove);
-    let numberOfGames = Number(form.numberOfGames);
-
-    const tx = await chess.createGameWager(
-      player1,
-      wagerToken,
-      wager,
-      maxTimePerMove,
-      numberOfGames,
-    );
-    const receipt = await tx.wait();
-
-    const wagers = await chess.getAllUserGames(accounts[0]);
-    const wagerAddress = wagers[wagers.length - 1];
-
-    alertSuccessFeedback('Wager Created: ' + wagerAddress);
-
-    return {
-      value: tx,
-      success: true,
-      status: '✅ Check out your transaction on Etherscan',
-    };
-  } catch (error) {
-    return {
-      success: false,
-      // @ts-ignore
-      status: '😥 Something went wrong: ' + error.message,
-    };
-  }
-};
-
-export const GetAllWagers = async (): Promise<Card[]> => {
-  await updateContractAddresses();
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
-  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
-  try {
-    const wagers = await chess.getAllUserGames(accounts[0]);
-
-    console.log('GetAllWagers');
-
-    const allWagerParams = [];
-    for (let i = 0; i < wagers.length; i++) {
-      const wagerParams = await chess.gameWagers(wagers[i]);
-
-      let isPlayerTurn;
-      const playerToMove = await chess.getPlayerMove(wagers[i]);
-      if (Number(accounts[0]) == Number(playerToMove)) {
-        isPlayerTurn = true;
-      } else {
-        isPlayerTurn = false;
-      }
-
-      const card: Card = {
-        matchAddress: wagers[i],
-        player0Address: wagerParams[0],
-        player1Address: wagerParams[1],
-        wagerToken: wagerParams[2],
-        wagerAmount: parseInt(wagerParams[3]),
-        numberOfGames: parseInt(wagerParams[4]),
-        isInProgress: wagerParams[5],
-        timeLimit: parseInt(wagerParams[6]),
-        timeLastMove: parseInt(wagerParams[7]),
-        timePlayer0: parseInt(wagerParams[8]),
-        timePlayer1: parseInt(wagerParams[9]),
-        isPlayerTurn: isPlayerTurn,
+      console.log(data);
+      const Pool: PoolData = {
+        token0: data[0],
+        token1: data[1],
+        amount0: data[2],
+        amount1: data[3],
+        totalShares: data[4],
+        isStable: data[5],
+        fee0: data[6],
+        fee1: data[7],
+        feeRate: data[8] 
       };
 
-      allWagerParams.push(card);
+      AllPoolData.push(Pool);
     }
-
-    return allWagerParams;
+    
+    return {
+      data: AllPoolData,
+      amount: PIDs
+    };
   } catch (error) {
-    console.log(error);
-
-    const card = {} as Card;
-    return [card];
+    return {
+      amount: 0
+    };
   }
 };
 
-export const GetAllWagersForPairing = async () => {
-  await updateContractAddresses();
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-  const accounts = await provider.send('eth_requestAccounts', []);
-
-  const chess = new ethers.Contract(ChessAddress, AMM_ABI, signer);
-  try {
-    // const totalWagerCount = Number(await chess.getAllWagersCount());
-
-    const wagers = await chess.getAllWagerAddresses();
-
-    const pairingRoomWagers = [];
-
-    for (let i = 0; i < wagers.length; i++) {
-      const wagerParams = await chess.gameWagers(wagers[i]);
-
-      if (
-        wagerParams.player1 === '0x0000000000000000000000000000000000000000'
-      ) {
-        const wagerParams = await chess.gameWagers(wagers[i]);
-
-        const card: Card = {
-          matchAddress: wagers[i],
-          player0Address: wagerParams[0],
-          player1Address: wagerParams[1],
-          wagerToken: wagerParams[2],
-          wagerAmount: parseInt(wagerParams[3]),
-          numberOfGames: parseInt(wagerParams[4]),
-          isInProgress: wagerParams[5],
-          timeLimit: parseInt(wagerParams[6]),
-          timeLastMove: parseInt(wagerParams[7]),
-          timePlayer0: parseInt(wagerParams[8]),
-          timePlayer1: parseInt(wagerParams[9]),
-          isPlayerTurn: false,
-        };
-
-        pairingRoomWagers.push(card);
-      }
-    }
-
-    console.log('Pairing room wagers');
-
-    return pairingRoomWagers;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
-};

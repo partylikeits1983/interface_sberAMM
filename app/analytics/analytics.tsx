@@ -1,6 +1,6 @@
 'use client';
 
-import { GetWagersDB } from 'ui/wallet-ui/api/db-api';
+import { GetPoolData } from 'ui/wallet-ui/api/form';
 
 import {
   ChakraProvider,
@@ -31,9 +31,10 @@ interface AnalyticsProps {
 }
 
 const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
-  const [totalGames, setTotalGames] = useState('');
-  const [totalWagers, setTotalWagers] = useState('');
-  const [wagerAddresses, setWagerAddresses] = useState<string[]>([]); // Specify string[] as the state type
+  const [totalPools, setTotalPools] = useState('');
+  // const [totalWagers, setTotalWagers] = useState('');
+
+
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -42,6 +43,10 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
     const fetchData = async () => {
       if (!useAPI) {
         try {
+          const PoolData = await GetPoolData();
+
+          setTotalPools(PoolData.amount);
+
           setLoading(false);
         } catch (error) {
           console.log(error);
@@ -49,11 +54,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       } else {
         try {
           // trying to ping the GCP API
-          const wagerAddresses = await GetWagersDB();
-
-          setWagerAddresses(wagerAddresses);
-          setTotalGames(wagerAddresses.length.toString());
-          setTotalWagers(wagerAddresses.length.toString());
+          // const wagerAddresses = await GetWagersDB();
 
           setLoading(false);
         } catch (error) {
@@ -84,13 +85,9 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
       <StatGroup color="white">
         <Stat>
           <StatLabel>Total Number of Token Pairs</StatLabel>
-          {loading ? <Spinner /> : <StatNumber>{totalGames}</StatNumber>}
+          {loading ? <Spinner /> : <StatNumber>{totalPools}</StatNumber>}
         </Stat>
 
-        <Stat>
-          <StatLabel>Total Liquidity</StatLabel>
-          {loading ? <Spinner /> : <StatNumber>{totalWagers}</StatNumber>}
-        </Stat>
       </StatGroup>
 
       <Box overflowX="auto" maxWidth="100%">
