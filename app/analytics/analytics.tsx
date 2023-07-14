@@ -34,7 +34,6 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
   const [totalPools, setTotalPools] = useState('');
   // const [totalWagers, setTotalWagers] = useState('');
 
-
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -87,11 +86,9 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           <StatLabel>Total Number of Token Pairs</StatLabel>
           {loading ? <Spinner /> : <StatNumber>{totalPools}</StatNumber>}
         </Stat>
-
       </StatGroup>
 
-      <Box overflowX="auto" maxWidth="100%">
-      </Box>
+      <Box overflowX="auto" maxWidth="100%"></Box>
     </ChakraProvider>
   );
 };

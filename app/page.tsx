@@ -8,9 +8,7 @@ import { Analytics } from '@vercel/analytics/react';
 export default function Page() {
   return (
     <div className="space-y-8">
-      <h1 className="font-large text-xl text-gray-300">
-        Sberbank AMM
-      </h1>
+      <h1 className="font-large text-xl text-gray-300">Sberbank AMM</h1>
       <div
         style={{
           display: 'flex',

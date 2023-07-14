@@ -250,7 +250,6 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
       await SberAMM.deposit(PID, inputs.amount0, inputs.amount1);
     }
 
-
     return {
       status: true
     };

@@ -40,7 +40,8 @@ interface FormInputs {
 
 export default function ChallengeForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
-  const [isLoadingDepositLiquidity, setIsLoadingDepositLiquidity] = useState(false);
+  const [isLoadingDepositLiquidity, setIsLoadingDepositLiquidity] =
+    useState(false);
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
@@ -62,28 +63,27 @@ export default function ChallengeForm() {
     amount0: 0,
     amount1: 0,
     fee: 0,
-    isStable: false
+    isStable: false,
   });
 
-const handleInputChange = (
-  event: React.ChangeEvent<HTMLInputElement>,
-): void => {
-  const { name, value, type, checked } = event.target;
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    const { name, value, type, checked } = event.target;
 
-  const inputValue = type === 'checkbox' ? checked : value;
+    const inputValue = type === 'checkbox' ? checked : value;
 
-  console.log(inputValue);
+    console.log(inputValue);
 
-  setFormInputs((prevInputs) => ({
-    ...prevInputs,
-    [name]: inputValue,
-  }));
-};
+    setFormInputs((prevInputs) => ({
+      ...prevInputs,
+      [name]: inputValue,
+    }));
+  };
 
-// add this useEffect hook
-useEffect(() => {
-  console.log(formInputs);
-}, [formInputs]); // dependency array
+  useEffect(() => {
+    console.log(formInputs);
+  }, [formInputs]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -160,18 +160,15 @@ useEffect(() => {
               />
             </FormControl>
 
-
             <FormControl display="flex" alignItems="center">
-  <FormLabel mb="0">Is Stable Pair</FormLabel>
-  <Switch 
-    name="isStable"
-    isChecked={formInputs.isStable}
-    onChange={handleInputChange} 
-    colorScheme="green" 
-  />
-</FormControl>
-
-
+              <FormLabel mb="0">Is Stable Pair</FormLabel>
+              <Switch
+                name="isStable"
+                isChecked={formInputs.isStable}
+                onChange={handleInputChange}
+                colorScheme="green"
+              />
+            </FormControl>
 
             <HStack spacing="4">
               <Button

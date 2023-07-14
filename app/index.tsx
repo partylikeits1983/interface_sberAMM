@@ -9,16 +9,16 @@ export default function Page() {
   return (
     <div className="space-y-8">
       <h1 className="font-large text-xl text-gray-300">
-       SberAMM | Swap Tokens on Siberium 
+        SberAMM | Swap Tokens on Siberium
       </h1>
 
       <ul className="font-small text-gray-300">
         <li>
-          SberAMM is a non custodial automated market maker on the Siberium blockchain.
+          SberAMM is a non custodial automated market maker on the Siberium
+          blockchain.
         </li>
 
         <br></br>
-
       </ul>
 
       <div

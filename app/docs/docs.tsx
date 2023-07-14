@@ -123,7 +123,6 @@ export default function Docs() {
     }
   };
 
-
   return (
     <ChakraProvider>
       <Flex flexDirection="column" alignItems="center">
@@ -145,10 +144,15 @@ export default function Docs() {
             color="green.500"
             fontWeight="bold"
             onClick={() => {
-              window.open('https://github.com/partylikeits1983/sberAMM', '_blank');
+              window.open(
+                'https://github.com/partylikeits1983/sberAMM',
+                '_blank',
+              );
             }}
           >
-            <i style={{ color: 'green.500' }}>github.com/partylikeits1983/sberAMM</i>
+            <i style={{ color: 'green.500' }}>
+              github.com/partylikeits1983/sberAMM
+            </i>
           </Link>
         </Box>
         <Box mt={2}>
@@ -279,7 +283,6 @@ export default function Docs() {
           </Box>
         </Flex>
 
-
         <Flex
           justifyContent="center"
           mt={4}
@@ -340,10 +343,6 @@ export default function Docs() {
             </Flex>
           </Box>
         </Flex>
-
-
-
-        
       </Flex>
     </ChakraProvider>
   );
