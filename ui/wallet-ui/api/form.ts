@@ -372,14 +372,14 @@ export const ExecuteSwap = async (input: SwapInputs) => {
 
   const token0 = input.token0;
   const token1 = input.token1;
-  const amountToken0 = input.amountToken0;
+  const amountToken0 = ethers.utils.parseEther(input.amountToken0);
   const isStable = input.isStable;
-  const fee = input.poolFee;
-  const maxSlippage = input.maxSlippage;
+  const fee = ethers.utils.parseEther(input.poolFee);
+  // const maxSlippage = input.maxSlippage;
 
   const _fee = ethers.utils.parseEther(fee.toString());
 
-  const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
+  // const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
 
   try {
     let PID = 0;
@@ -412,32 +412,29 @@ export const EstimateAmountOut = async (input: SwapInputs) => {
 
   const token0 = input.token0;
   const token1 = input.token1;
-  const amountToken0 = input.amountToken0;
+  const amountToken0 = ethers.utils.parseEther(input.amountToken0);
   const isStable = input.isStable;
-  const fee = input.poolFee;
-  const maxSlippage = input.maxSlippage;
+  const fee = ethers.utils.parseEther(input.poolFee);
+  // const maxSlippage = input.maxSlippage;
 
-  const _fee = ethers.utils.parseEther(fee.toString());
-
-  const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
+  // const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
 
   try {
-    let PID = 0;
+    let PID;
 
     if (isStable) {
-      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, fee, isStable));
     } else {
-      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, fee, isStable));
     }
-
     const amountOut = ethers.utils.formatEther(await SberAMM.estimateAmountOut(PID, token0, amountToken0));
 
     return {
-      estimatedOut: amountOut
+      estimated: Number(amountOut)
     };
   } catch (error) {
     return {
-      estimatedOut: 0
+      estimated: 0
     };
   }
 };
