@@ -19,6 +19,7 @@ interface ContractAddress {
 }
 
 interface PoolData {
+  PID: number;
   token0: string;
   token1: string;
   amount0: number;
@@ -179,33 +180,33 @@ export const GetPoolData = async () => {
   try {
     const PIDs = await SberAMM.PIDs();
 
-    // const AllPoolData: PoolData[] = [];
-
-    for (let i = 1; i < PIDs; i++) {
+    for (let i = 1; i <= PIDs; i++) {
       const data = await SberAMM.Pools(i);
 
-      console.log(data);
       const Pool: PoolData = {
+        PID: i,
         token0: data[0],
         token1: data[1],
-        amount0: data[2],
-        amount1: data[3],
-        totalShares: data[4],
-        isStable: data[5],
-        fee0: data[6],
-        fee1: data[7],
-        feeRate: data[8],
+        amount0: Number(ethers.utils.formatEther(data[2])),
+        amount1: Number(ethers.utils.formatEther(data[3])),
+        totalShares: Number(ethers.utils.formatEther(data[4])),
+        isStable: Boolean(data[5]),
+        fee0: Number(ethers.utils.formatEther(data[6])),
+        fee1: Number(ethers.utils.formatEther(data[7])),
+        feeRate: Number(ethers.utils.formatEther(data[8])),
       };
 
       AllPoolData.push(Pool);
     }
 
+    console.log(AllPoolData)
     return {
       data: AllPoolData,
       amount: PIDs,
     };
   } catch (error) {
     return {
+      data: [],
       amount: 0,
     };
   }
