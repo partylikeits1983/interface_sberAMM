@@ -18,6 +18,7 @@ import CardAccordion from './CardAccordion'; // Import the CardAccordion compone
 import CardFilterControls from './CardFilterControls';
 
 interface LiquidityPosition {
+  PID: number;
   token0: string;
   token1: string;
   poolBalance0: number;
