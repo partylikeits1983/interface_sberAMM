@@ -44,7 +44,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
         try {
           const PoolData = await GetPoolData();
 
-          setTotalPools(PoolData.amount);
+          setTotalPools(Number(PoolData.amount).toString());
 
           setLoading(false);
         } catch (error) {
