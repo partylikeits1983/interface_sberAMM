@@ -21,7 +21,7 @@ import {
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const { ethers } = require('ethers');
-const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
+const { EstimateAmountOut, ExectuteSwap, Approve } = require('ui/wallet-ui/api/form');
 
 import tokenOptions from './autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
@@ -49,19 +49,21 @@ export default function SwapForm() {
   const HandleClickImplementSwap = async () => {
     console.log(swapInputs);
     setIsLoadingCreateWager(true);
-    // await CreateWager(formInputs);
+    await ExectuteSwap(swapInputs);
     setIsLoadingCreateWager(false);
   };
 
-  const [swapInputs, setSwapInputs] = useState<SwapInputs>({
+  const initialSwapInputs = {
     token0: '',
     token1: '',
     amountToken0: 0,
     isStable: false,
     poolFee: 0,
     maxSlippage: 0,
-  });
-
+  };
+  
+  const [swapInputs, setSwapInputs] = useState<SwapInputs>(initialSwapInputs);
+  
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setSwapInputs((prevInputs) => ({
@@ -69,11 +71,25 @@ export default function SwapForm() {
       [name]: value,
     }));
   };
-
+  
+  const HandleEstimateOut = async () => {
+    console.log("All inputs have changed ");
+    const estimatedOut = await EstimateAmountOut(swapInputs);
+    console.log("EstimatedOut", estimatedOut);
+  };
+  
   useEffect(() => {
     console.log(swapInputs);
+    // The check condition can vary based on your requirements. The following is an example.
+    const allChanged = Object.entries(swapInputs).every(([key, value]) => value !== initialSwapInputs[key as keyof SwapInputs]);
+  
+    if (allChanged) {
+      HandleEstimateOut();
+    }
   }, [swapInputs]);
-
+  
+  
+  
 
   const handleSwitchChange = (
     event: React.ChangeEvent<HTMLInputElement>,

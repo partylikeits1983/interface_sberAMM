@@ -233,7 +233,7 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
   const addressToken1 = inputs.token1;
   const amount0 = ethers.utils.parseUnits(inputs.amount0.toString(), 18);
   const amount1 = ethers.utils.parseUnits(inputs.amount1.toString(), 18);
-  const fee = inputs.fee; // this needs to be edited
+  const fee = ethers.utils.parseUnits(inputs.fee.toString(), 18);
   const isStable = inputs.isStable;
 
   const PID = await SberAMM.getPool(
@@ -352,14 +352,30 @@ export const ViewLiquidityPositions = async () => {
   }
 };
 
-
-export const ExecuteSwap = async (token0Address: String, token1Address: String, token0Amount: Number, fee: Number, isStable: Boolean, maxSlippage: Number) => {
+interface SwapInputs {
+  token0: string;
+  token1: string;
+  amountToken0: number;
+  isStable: boolean;
+  poolFee: number;
+  maxSlippage: number;
+}
+// token0Address: String, token1Address: String, token0Amount: Number, fee: Number, isStable: Boolean, maxSlippage: Number
+export const ExecuteSwap = async (input: SwapInputs) => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
   const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
+
+
+  const token0 = input.token0;
+  const token1 = input.token1;
+  const amountToken0 = input.amountToken0;
+  const isStable = input.isStable;
+  const fee = input.poolFee;
+  const maxSlippage = input.maxSlippage;
 
   const _fee = ethers.utils.parseEther(fee.toString());
 
@@ -369,12 +385,12 @@ export const ExecuteSwap = async (token0Address: String, token1Address: String, 
     let PID = 0;
 
     if (isStable) {
-      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
     } else {
-      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
     }
 
-    await SberAMM.swap(PID, token0Address, token0Amount);
+    await SberAMM.swap(PID, token0, amountToken0);
 
     return {
       status: true,
@@ -386,8 +402,7 @@ export const ExecuteSwap = async (token0Address: String, token1Address: String, 
   }
 };
 
-
-export const EstimateAmountOut = async (token0Address: String, token1Address: String, token0Amount: Number, fee: Number, isStable: Boolean) => {
+export const EstimateAmountOut = async (input: SwapInputs) => {
   await updateContractAddresses();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -395,26 +410,34 @@ export const EstimateAmountOut = async (token0Address: String, token1Address: St
 
   const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
 
+  const token0 = input.token0;
+  const token1 = input.token1;
+  const amountToken0 = input.amountToken0;
+  const isStable = input.isStable;
+  const fee = input.poolFee;
+  const maxSlippage = input.maxSlippage;
+
   const _fee = ethers.utils.parseEther(fee.toString());
 
+  const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
 
   try {
     let PID = 0;
 
     if (isStable) {
-      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
     } else {
-      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
     }
 
-    await SberAMM.swap(PID, token0Address, token0Amount);
+    const amountOut = ethers.utils.formatEther(await SberAMM.estimateAmountOut(PID, token0, amountToken0));
 
     return {
-      status: true,
+      estimatedOut: amountOut
     };
   } catch (error) {
     return {
-      status: false,
+      estimatedOut: 0
     };
   }
 };
