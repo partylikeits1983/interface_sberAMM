@@ -182,7 +182,6 @@ export const GetPoolData = async () => {
     // const AllPoolData: PoolData[] = [];
 
     for (let i = 1; i < PIDs; i++) {
-
       const data = await SberAMM.Pools(i);
 
       console.log(data);
@@ -195,19 +194,19 @@ export const GetPoolData = async () => {
         isStable: data[5],
         fee0: data[6],
         fee1: data[7],
-        feeRate: data[8] 
+        feeRate: data[8],
       };
 
       AllPoolData.push(Pool);
     }
-    
+
     return {
       data: AllPoolData,
-      amount: PIDs
+      amount: PIDs,
     };
   } catch (error) {
     return {
-      amount: 0
+      amount: 0,
     };
   }
 };
@@ -236,38 +235,45 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
   const fee = inputs.fee; // this needs to be edited
   const isStable = inputs.isStable;
 
-  const PID = await SberAMM.getPool(addressToken0, addressToken1, fee, isStable);
+  const PID = await SberAMM.getPool(
+    addressToken0,
+    addressToken1,
+    fee,
+    isStable,
+  );
 
-  console.log("PID");
+  console.log('PID');
   console.log(PID);
   console.log(SberAMMaddress);
 
   try {
-
     if (PID == 0) {
-      alert("creating new pair")
+      alert('creating new pair');
       // create pair because it doesn't exist
-      const newPID = await SberAMM.createPair(addressToken0, addressToken1, fee, isStable);
+      const newPID = await SberAMM.createPair(
+        addressToken0,
+        addressToken1,
+        fee,
+        isStable,
+      );
       await newPID.wait();
 
       const tx = await SberAMM.deposit(PID, amount0, amount1);
       await tx.wait();
     } else {
-
       const tx = await SberAMM.deposit(PID, amount0, amount1);
       await tx.wait();
     }
 
     return {
-      status: true
+      status: true,
     };
   } catch (error) {
     return {
-      status: false
+      status: false,
     };
   }
 };
-
 
 interface LiquidityPosition {
   PID: number;
@@ -294,25 +300,23 @@ export const ViewLiquidityPositions = async () => {
 
   const PID = Number(await SberAMM.PIDs());
 
-  console.log("PID", PID);
-
+  console.log('PID', PID);
 
   try {
     const Positions: LiquidityPosition[] = [];
 
     for (let i = 1; i <= PID; i++) {
-
       console.log(signerAddress);
       const PoolShareData = Number(await SberAMM.PoolShares(signerAddress, i));
 
-      console.log("poolsharedata", PoolShareData);
+      console.log('poolsharedata', PoolShareData);
 
       if (PoolShareData != 0) {
         const PoolData = await SberAMM.Pools(i);
         const UserBalance = await SberAMM.withdrawPreview(i);
 
-        console.log("PoolData", PoolData);
-        console.log("userbalance ", UserBalance)
+        console.log('PoolData', PoolData);
+        console.log('userbalance ', UserBalance);
 
         const UserFeesToken0 = await SberAMM.viewEarnedFees(i, PoolData[0]);
         const UserFeesToken1 = await SberAMM.viewEarnedFees(i, PoolData[1]);
@@ -332,19 +336,17 @@ export const ViewLiquidityPositions = async () => {
         };
 
         Positions.push(Position);
-
       }
-      console.log("HERE")
+      console.log('HERE');
       console.log(Positions);
     }
 
     return {
-      Positions
+      Positions,
     };
   } catch (error) {
     return {
-      status: false
+      status: false,
     };
   }
 };
-
