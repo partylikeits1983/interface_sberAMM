@@ -10,30 +10,29 @@ import {
   Flex,
 } from '@chakra-ui/react';
 
-const { GetAllWagers } = require('ui/wallet-ui/api/form');
+const { ViewLiquidityPositions } = require('ui/wallet-ui/api/form');
 
 import { useMetamask } from 'ui/wallet-ui/components/Metamask';
 
 import CardAccordion from './CardAccordion'; // Import the CardAccordion component
 import CardFilterControls from './CardFilterControls';
 
-interface Card {
-  matchAddress: string;
-  player0Address: string;
-  player1Address: string;
-  wagerToken: string;
-  wagerAmount: number;
-  numberOfGames: number;
-  isInProgress: boolean;
-  timeLimit: number;
-  timeLastMove: number;
-  timePlayer0: number;
-  timePlayer1: number;
-  isPlayerTurn: boolean;
+interface LiquidityPosition {
+  token0: string;
+  token1: string;
+  poolBalance0: number;
+  poolBalance1: number;
+  userBalance0: number;
+  userBalance1: number;
+  userFees0: number;
+  userFees1: number;
+  poolFeeRate: number;
+  isStable: boolean;
 }
 
+
 interface Props {
-  cards: Card[];
+  cards: LiquidityPosition[];
 }
 
 const CardList = () => {
@@ -41,7 +40,7 @@ const CardList = () => {
   const { connect, accounts } = useMetamask();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<LiquidityPosition[]>([]);
 
   const [sortValue, setSortValue] = useState('');
   const [filterValue, setFilterValue] = useState(false);
@@ -67,12 +66,17 @@ const CardList = () => {
     async function fetchCards() {
       try {
         setIsLoading(true);
-        const data = await GetAllWagers();
+        const data = await ViewLiquidityPositions();
 
-        if (Array.isArray(data)) {
-          setCards(data.reverse()); // reverse to show newest first
+        console.log("Inside CardList");
+        console.log(data);
+        console.log(typeof data);
+        
+
+        if (data && data.Positions && Array.isArray(data.Positions)) {
+          setCards(data.Positions.reverse()); // reverse to show newest first
         } else {
-          console.error('GetAllWagers returned invalid data:', cards);
+          console.error('ViewLiquidityPositions returned invalid data:', data);
         }
         setIsLoading(false);
       } catch (error) {
@@ -85,18 +89,18 @@ const CardList = () => {
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {
       case 'isPending':
-        return a.isInProgress === b.isInProgress ? 0 : a.isInProgress ? -1 : 1;
+        return a.isStable === b.isStable ? 0 : a.isStable ? -1 : 1;
       case 'wagerAmountAsc':
-        return a.wagerAmount - b.wagerAmount;
+        return a.poolBalance0 - b.poolBalance0;
       case 'wagerAmountDesc':
-        return b.wagerAmount - a.wagerAmount;
+        return b.poolBalance0 - a.poolBalance0;
       default:
         return 0;
     }
   });
 
   const filteredAndSortedCards = sortedCards.filter(
-    (card) => !filterValue || card.isInProgress,
+    (card) => !filterValue || card.isStable,
   );
 
   return (
@@ -117,7 +121,7 @@ const CardList = () => {
           </Flex>
         ) : filteredAndSortedCards.length ? (
           filteredAndSortedCards.map((card, index) => (
-            <CardAccordion key={index} card={card} account={account} />
+            <CardAccordion key={index} card={card} account={"1"} />
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">

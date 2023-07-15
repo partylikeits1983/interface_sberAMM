@@ -268,3 +268,83 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
   }
 };
 
+
+interface LiquidityPosition {
+  PID: number;
+  token0: string;
+  token1: string;
+  poolBalance0: number;
+  poolBalance1: number;
+  userBalance0: number;
+  userBalance1: number;
+  userFees0: number;
+  userFees1: number;
+  poolFeeRate: number;
+  isStable: boolean;
+}
+
+export const ViewLiquidityPositions = async () => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const signerAddress = await signer.getAddress();
+
+  const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
+
+  const PID = Number(await SberAMM.PIDs());
+
+  console.log("PID", PID);
+
+
+  try {
+    const Positions: LiquidityPosition[] = [];
+
+    for (let i = 1; i <= PID; i++) {
+
+      console.log(signerAddress);
+      const PoolShareData = Number(await SberAMM.PoolShares(signerAddress, i));
+
+      console.log("poolsharedata", PoolShareData);
+
+      if (PoolShareData != 0) {
+        const PoolData = await SberAMM.Pools(i);
+        const UserBalance = await SberAMM.withdrawPreview(i);
+
+        console.log("PoolData", PoolData);
+        console.log("userbalance ", UserBalance)
+
+        const UserFeesToken0 = await SberAMM.viewEarnedFees(i, PoolData[0]);
+        const UserFeesToken1 = await SberAMM.viewEarnedFees(i, PoolData[1]);
+
+        const Position: LiquidityPosition = {
+          PID: i,
+          token0: PoolData[0],
+          token1: PoolData[1],
+          poolBalance0: PoolData[2],
+          poolBalance1: PoolData[3],
+          userBalance0: UserBalance[0],
+          userBalance1: UserBalance[1],
+          userFees0: UserFeesToken0,
+          userFees1: UserFeesToken1,
+          poolFeeRate: PoolData[8],
+          isStable: PoolData[5],
+        };
+
+        Positions.push(Position);
+
+      }
+      console.log("HERE")
+      console.log(Positions);
+    }
+
+    return {
+      Positions
+    };
+  } catch (error) {
+    return {
+      status: false
+    };
+  }
+};
+

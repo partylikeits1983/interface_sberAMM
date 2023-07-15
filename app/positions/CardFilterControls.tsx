@@ -26,20 +26,17 @@ const CardFilterControls: React.FC<CardFilterControlsProps> = ({
           color="white"
           width="100%"
         >
-          <option style={{ color: 'black' }} value="isPending">
-            In Progress First
+          <option style={{ color: 'black' }} value="isStable">
+            Stable Pools first
           </option>
-          <option style={{ color: 'black' }} value="wagerAmountAsc">
-            Wager Amount (lowest first)
-          </option>
-          <option style={{ color: 'black' }} value="wagerAmountDesc">
-            Wager Amount (highest first)
+          <option style={{ color: 'black' }} value="PID">
+            PID Number (lowest first)
           </option>
         </Select>
       </Flex>
       <Flex width="50%" justifyContent="flex-end">
         <label htmlFor="hide-games" style={{ marginRight: '10px' }}>
-          Hide Pending
+          Hide Stable Pools
         </label>
         <Switch
           id="hide-games"

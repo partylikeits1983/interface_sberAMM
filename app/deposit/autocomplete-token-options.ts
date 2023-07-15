@@ -15,13 +15,13 @@ const options = [
     label: 'USDT',
     image:
       'https://raw.githubusercontent.com/dappradar/tokens/main/ethereum/0xdac17f958d2ee523a2206206994597c13d831ec7/logo.png',
-    address: '0xF7f19530abFEeF184854A58404D98a7936D2F7DD',
+    address: '0x04cd901a095dCFB9a50CB49761Dd2b2f23E05DB4',
   },
   {
     label: 'USDC',
     image:
       'https://raw.githubusercontent.com/dappradar/tokens/main/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/logo.png',
-    address: '0x6EBDAec38196A708713d6024bf1cAdBdcF9f99f6',
+    address: '0xF4FB85b11680e341EcF460e88BD81710c3F79309',
   },
   {
     label: 'DAI',
