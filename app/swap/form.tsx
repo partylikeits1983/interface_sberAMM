@@ -16,13 +16,17 @@ import {
   SliderThumb,
   Tooltip,
   Switch,
-  Text
+  Text,
 } from '@chakra-ui/react';
 
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const { ethers } = require('ethers');
-const { EstimateAmountOut, ExectuteSwap, Approve } = require('ui/wallet-ui/api/form');
+const {
+  EstimateAmountOut,
+  ExectuteSwap,
+  Approve,
+} = require('ui/wallet-ui/api/form');
 
 import tokenOptions from './autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
@@ -55,7 +59,7 @@ export default function SwapForm() {
     setIsLoadingCreateWager(false);
   };
 
-/*   const HandleEstimateAmountOut = async () => {
+  /*   const HandleEstimateAmountOut = async () => {
     setEstimatedAmountOut(await EstimateAmountOut(swapInputs));
   } */
 
@@ -67,46 +71,46 @@ export default function SwapForm() {
     poolFee: 0,
     maxSlippage: 0,
   };
-  
+
   const [swapInputs, setSwapInputs] = useState<SwapInputs>(initialSwapInputs);
-  
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
     const { name, value } = event.target;
     setSwapInputs((prevInputs) => ({
       ...prevInputs,
       [name]: value,
     }));
   };
-  
+
   useEffect(() => {
     if (allInputsHaveChanged) {
       // HandleEstimateAmountOut();
     }
   }, [swapInputs]);
-  
-  
-  
+
   const HandleEstimateOut = async () => {
-    console.log("All inputs have changed ");
+    console.log('All inputs have changed ');
     const estimatedOut = await EstimateAmountOut(swapInputs);
 
     setEstimatedAmountOut(estimatedOut.estimated);
-    console.log("EstimatedOut", estimatedOut.estimated);
-    console.log("type", typeof estimatedOut.estimated);
+    console.log('EstimatedOut', estimatedOut.estimated);
+    console.log('type', typeof estimatedOut.estimated);
   };
-  
+
   useEffect(() => {
     console.log(swapInputs);
     // The check condition can vary based on your requirements. The following is an example.
-    const allChanged = Object.entries(swapInputs).every(([key, value]) => value !== initialSwapInputs[key as keyof SwapInputs]);
- 
-    
+    const allChanged = Object.entries(swapInputs).every(
+      ([key, value]) => value !== initialSwapInputs[key as keyof SwapInputs],
+    );
+
     if (allChanged) {
       setAllInputsHaveChanged(true);
       HandleEstimateOut();
     }
   }, [swapInputs]);
-
 
   const handleSwitchChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -190,38 +194,43 @@ export default function SwapForm() {
               />
             </FormControl>
 
-
             <FormControl position="relative">
-  <FormLabel>
-    Max Slippage{' '}
-    <Box as="span" width="4em" textAlign="right">
-      {swapInputs.maxSlippage}%
-    </Box>
-    <Tooltip
-      label="Maximum acceptable slippage"
-      aria-label="Number of games tooltip"
-      placement="right"
-    >
-      <Box as={InfoOutlineIcon} position="absolute" right={0} top={"30%"} transform={"translateY(-50%)"} ml={0} mb={1.5} />
-    </Tooltip>
-  </FormLabel>
+              <FormLabel>
+                Max Slippage{' '}
+                <Box as="span" width="4em" textAlign="right">
+                  {swapInputs.maxSlippage}%
+                </Box>
+                <Tooltip
+                  label="Maximum acceptable slippage"
+                  aria-label="Number of games tooltip"
+                  placement="right"
+                >
+                  <Box
+                    as={InfoOutlineIcon}
+                    position="absolute"
+                    right={0}
+                    top={'30%'}
+                    transform={'translateY(-50%)'}
+                    ml={0}
+                    mb={1.5}
+                  />
+                </Tooltip>
+              </FormLabel>
 
-  <Slider
-    min={0}
-    max={25}
-    step={0.1}
-    value={swapInputs.maxSlippage}
-    onChange={handleSliderChange}
-    defaultValue={swapInputs.maxSlippage}
-  >
-    <SliderTrack bg="#e2e8f0">
-      <SliderFilledTrack bg="#94febf" />
-    </SliderTrack>
-    <SliderThumb />
-  </Slider>
-</FormControl>
-
-
+              <Slider
+                min={0}
+                max={25}
+                step={0.1}
+                value={swapInputs.maxSlippage}
+                onChange={handleSliderChange}
+                defaultValue={swapInputs.maxSlippage}
+              >
+                <SliderTrack bg="#e2e8f0">
+                  <SliderFilledTrack bg="#94febf" />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+            </FormControl>
 
             <FormControl display="flex" alignItems="center">
               <FormLabel htmlFor="isStable" mb="0">
@@ -234,11 +243,9 @@ export default function SwapForm() {
                 ml="2"
               />
             </FormControl>
-            <FormLabel htmlFor="isStable" mb="0">Estimated Amount Out: {estimatedAmountOut.toFixed(2).toString()}</FormLabel>
-
-
-
-
+            <FormLabel htmlFor="isStable" mb="0">
+              Estimated Amount Out: {estimatedAmountOut.toFixed(2).toString()}
+            </FormLabel>
 
             <HStack spacing="4">
               <Button
