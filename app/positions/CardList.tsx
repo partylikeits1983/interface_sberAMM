@@ -31,7 +31,6 @@ interface LiquidityPosition {
   isStable: boolean;
 }
 
-
 interface Props {
   cards: LiquidityPosition[];
 }
@@ -69,10 +68,9 @@ const CardList = () => {
         setIsLoading(true);
         const data = await ViewLiquidityPositions();
 
-        console.log("Inside CardList");
+        console.log('Inside CardList');
         console.log(data);
         console.log(typeof data);
-        
 
         if (data && data.Positions && Array.isArray(data.Positions)) {
           setCards(data.Positions.reverse()); // reverse to show newest first
@@ -122,7 +120,7 @@ const CardList = () => {
           </Flex>
         ) : filteredAndSortedCards.length ? (
           filteredAndSortedCards.map((card, index) => (
-            <CardAccordion key={index} card={card} account={"1"} />
+            <CardAccordion key={index} card={card} account={'1'} />
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">

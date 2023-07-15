@@ -25,8 +25,6 @@ import SidePanel from './sidePanel';
 
 import { LiquidityPosition } from '../types';
 
-
-
 interface Props {
   cards: LiquidityPosition[];
 }
@@ -91,154 +89,159 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
   }
 
   return (
-<Accordion allowToggle>
-  <AccordionItem>
-    <h2>
-      <AccordionButton>
-        <Flex justify="space-between" alignItems="center" w="full">
-          <HStack spacing="1.5rem">
-            <Identicon account={card.token0} />
-            <Text fontSize="md">{`Pool ID: ${(card.PID.toString())}`}</Text>
-          </HStack>
+    <Accordion allowToggle>
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Flex justify="space-between" alignItems="center" w="full">
+              <HStack spacing="1.5rem">
+                <Identicon account={card.token0} />
+                <Text fontSize="md">{`Pool ID: ${card.PID.toString()}`}</Text>
+              </HStack>
 
-          <HStack spacing="1.5rem">
-            <Text></Text>
-            <AccordionIcon />
-          </HStack>
-        </Flex>
-      </AccordionButton>
-    </h2>
-    <AccordionPanel pb={4}>
-      <Flex
-        direction={useBreakpointValue({ base: 'column', md: 'row' })}
-        alignItems={useBreakpointValue({ base: 'stretch', md: 'flex-start' })}
-      >
-        <Stack
-          spacing={2}
-          width={useBreakpointValue({ base: '100%', md: '50%' })}
-        >
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              Token 0
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{formatAddress(card.token0)}</Text>
-              <CopyIcon
-                ml={2}
-                cursor="pointer"
-                onClick={() => handleCopyAddress(card.token0)}
-              />
+              <HStack spacing="1.5rem">
+                <Text></Text>
+                <AccordionIcon />
+              </HStack>
             </Flex>
-          </Stack>
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          <Flex
+            direction={useBreakpointValue({ base: 'column', md: 'row' })}
+            alignItems={useBreakpointValue({
+              base: 'stretch',
+              md: 'flex-start',
+            })}
+          >
+            <Stack
+              spacing={2}
+              width={useBreakpointValue({ base: '100%', md: '50%' })}
+            >
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Token 0
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">{formatAddress(card.token0)}</Text>
+                  <CopyIcon
+                    ml={2}
+                    cursor="pointer"
+                    onClick={() => handleCopyAddress(card.token0)}
+                  />
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              Token 1 
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{formatAddress(card.token1)}</Text>
-              <CopyIcon
-                ml={2}
-                cursor="pointer"
-                onClick={() => handleCopyAddress(card.token1)}
-              />
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Token 1
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">{formatAddress(card.token1)}</Text>
+                  <CopyIcon
+                    ml={2}
+                    cursor="pointer"
+                    onClick={() => handleCopyAddress(card.token1)}
+                  />
+                </Flex>
+              </Stack>
 
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Token 0
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.poolBalance0)}
+                  </Text>
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              Token 0 
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.poolBalance0)}</Text>
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Token 1
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.poolBalance1)}
+                  </Text>
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              Token 1 
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.poolBalance1)}</Text>
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  User balance token 0
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.poolBalance0)}
+                  </Text>
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              User balance token 0
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.poolBalance0)}</Text>
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  User balance token 1
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.poolBalance1)}
+                  </Text>
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              User balance token 1
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.poolBalance1)}</Text>
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  User fees token 0
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.userFees0)}
+                  </Text>
+                </Flex>
+              </Stack>
 
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  User fees token 1
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.userFees1)}
+                  </Text>
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              User fees token 0 
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.userFees0)}</Text>
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Pool Fee Rate
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">
+                    {ethers.utils.formatEther(card.poolFeeRate)}
+                  </Text>
+                </Flex>
+              </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              User fees token 1
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.userFees1)}</Text>
-            </Flex>
-          </Stack>
+              <Stack spacing={0}>
+                <Text fontSize="sm" fontWeight="bold" color="gray.500">
+                  Is stable pool
+                </Text>
+                <Flex alignItems="center">
+                  <Text fontSize="md">{card.isStable.toString()}</Text>
+                </Flex>
+              </Stack>
+            </Stack>
 
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-             Pool Fee Rate 
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{ethers.utils.formatEther(card.poolFeeRate)}</Text>
-            </Flex>
-          </Stack>
-
-          <Stack spacing={0}>
-            <Text fontSize="sm" fontWeight="bold" color="gray.500">
-              Is stable pool
-            </Text>
-            <Flex alignItems="center">
-              <Text fontSize="md">{card.isStable.toString()}</Text>
-            </Flex>
-          </Stack>
-
-
-
-
-        </Stack>
-          
-
-
-
-        <Box
-          width={useBreakpointValue({ base: '100%', md: '50%' })}
-          marginBottom={useBreakpointValue({ base: 4, md: 0 })}
-          order={useBreakpointValue({ base: 2, md: 1 })}
-        >
-
-        </Box>
-      </Flex>
-    </AccordionPanel>
-  </AccordionItem>
-</Accordion>
-
+            <Box
+              width={useBreakpointValue({ base: '100%', md: '50%' })}
+              marginBottom={useBreakpointValue({ base: 4, md: 0 })}
+              order={useBreakpointValue({ base: 2, md: 1 })}
+            ></Box>
+          </Flex>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   );
 };
 

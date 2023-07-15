@@ -29,57 +29,55 @@ import AutocompleteToken from './autocomplete-token';
 import AutocompletePlayer from './autocomplete-player';
 import pairingOptions from './autocomplete-player-options';
 
-interface FormInputs {
-  player1: string;
-  wagerToken: string;
-  wagerAmount: number;
-  timePerMove: number;
-  numberOfGames: number;
+interface SwapInputs {
+  token0: string;
+  token1: string;
+  amountToken0: number;
+  maxSlippage: number;
 }
 
-export default function ChallengeForm() {
+export default function SwapForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
-    await Approve(formInputs.wagerToken, formInputs.wagerAmount);
+    await Approve(swapInputs.token0, swapInputs.amountToken0);
     setIsLoadingApproval(false);
   };
 
-  const HandleClickCreateWager = async () => {
-    console.log(formInputs);
+  const HandleClickImplementSwap = async () => {
+    console.log(swapInputs);
     setIsLoadingCreateWager(true);
-    await CreateWager(formInputs);
+    // await CreateWager(formInputs);
     setIsLoadingCreateWager(false);
   };
 
-  const [formInputs, setFormInputs] = useState<FormInputs>({
-    player1: '',
-    wagerToken: '',
-    wagerAmount: 0,
-    timePerMove: 0,
-    numberOfGames: 0,
+  const [swapInputs, setSwapInputs] = useState<SwapInputs>({
+    token0: '',
+    token1: '',
+    amountToken0: 0,
+    maxSlippage: 0,
   });
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     const { name, value } = event.target;
-    setFormInputs((prevInputs) => ({
+    setSwapInputs((prevInputs) => ({
       ...prevInputs,
       [name]: value,
     }));
-    console.log(formInputs);
+    console.log(swapInputs);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    console.log(formInputs);
+    console.log(swapInputs);
   };
 
   const handleSliderChange = (value: number) => {
-    setFormInputs((prevInputs) => ({
+    setSwapInputs((prevInputs) => ({
       ...prevInputs,
       timePerMove: value,
     }));
@@ -105,7 +103,7 @@ export default function ChallengeForm() {
               <AutocompleteToken
                 options={tokenOptions}
                 onChange={(value: string) =>
-                  setFormInputs((prevInputs) => ({
+                  setSwapInputs((prevInputs) => ({
                     ...prevInputs,
                     wagerToken: value,
                   }))
@@ -118,7 +116,7 @@ export default function ChallengeForm() {
               <AutocompleteToken
                 options={tokenOptions}
                 onChange={(value: string) =>
-                  setFormInputs((prevInputs) => ({
+                  setSwapInputs((prevInputs) => ({
                     ...prevInputs,
                     wagerToken: value,
                   }))
@@ -131,7 +129,7 @@ export default function ChallengeForm() {
               <Input
                 type="number"
                 name="wagerAmount"
-                value={formInputs.wagerAmount}
+                value={swapInputs.amountToken0}
                 onChange={handleInputChange}
                 required
                 width="100%"
@@ -155,16 +153,16 @@ export default function ChallengeForm() {
                 min={0}
                 max={25}
                 step={0.1}
-                value={formInputs.timePerMove}
+                value={swapInputs.maxSlippage}
                 onChange={handleSliderChange}
-                defaultValue={formInputs.timePerMove}
+                defaultValue={swapInputs.maxSlippage}
               >
                 <SliderTrack bg="#e2e8f0">
                   <SliderFilledTrack bg="#94febf" />
                 </SliderTrack>
                 <SliderThumb />
               </Slider>
-              <p>{formInputs.timePerMove}</p>
+              <p>{swapInputs.maxSlippage}%</p>
             </FormControl>
 
             <HStack spacing="4">
@@ -208,7 +206,7 @@ export default function ChallengeForm() {
                 variant="solid"
                 size="lg"
                 loadingText="Submitting Transaction"
-                onClick={() => HandleClickCreateWager()}
+                onClick={() => HandleClickImplementSwap()}
                 _hover={{
                   color: '#000000',
                   backgroundColor: '#62ffa2',
