@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   FormControl,
@@ -14,8 +14,8 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  VStack,
   Tooltip,
+  Switch,
 } from '@chakra-ui/react';
 
 import { InfoOutlineIcon } from '@chakra-ui/icons';
@@ -26,19 +26,19 @@ const { CreateWager, Approve } = require('ui/wallet-ui/api/form');
 import tokenOptions from './autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
 
-import AutocompletePlayer from './autocomplete-player';
-import pairingOptions from './autocomplete-player-options';
-
 interface SwapInputs {
   token0: string;
   token1: string;
   amountToken0: number;
+  isStable: boolean;
+  poolFee: number;
   maxSlippage: number;
 }
 
 export default function SwapForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
+  const [estimatedAmountOut, setEstimatedAmountOut] = useState(0);
 
   const HandleClickApprove = async () => {
     setIsLoadingApproval(true);
@@ -57,18 +57,35 @@ export default function SwapForm() {
     token0: '',
     token1: '',
     amountToken0: 0,
+    isStable: false,
+    poolFee: 0,
     maxSlippage: 0,
   });
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     setSwapInputs((prevInputs) => ({
       ...prevInputs,
       [name]: value,
     }));
+  };
+
+  useEffect(() => {
     console.log(swapInputs);
+  }, [swapInputs]);
+
+
+  const handleSwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setSwapInputs((prevInputs) => {
+      const updatedInputs = {
+        ...prevInputs,
+        isStable: event.target.checked,
+      };
+      console.log(updatedInputs); // log the new state
+      return updatedInputs;
+    });
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -79,18 +96,8 @@ export default function SwapForm() {
   const handleSliderChange = (value: number) => {
     setSwapInputs((prevInputs) => ({
       ...prevInputs,
-      timePerMove: value,
+      maxSlippage: value,
     }));
-  };
-
-  const convertSecondsToTime = (seconds: number): string => {
-    const days = Math.floor(seconds / 86400);
-    seconds %= 86400;
-    const hours = Math.floor(seconds / 3600);
-    seconds %= 3600;
-    const minutes = Math.floor(seconds / 60);
-
-    return `${days} days ${hours} hours ${minutes} minutes`;
   };
 
   return (
@@ -99,26 +106,26 @@ export default function SwapForm() {
         <form onSubmit={handleSubmit}>
           <Stack spacing="4">
             <FormControl>
-              <FormLabel>Token </FormLabel>
+              <FormLabel>Sell Token</FormLabel>
               <AutocompleteToken
                 options={tokenOptions}
                 onChange={(value: string) =>
                   setSwapInputs((prevInputs) => ({
                     ...prevInputs,
-                    wagerToken: value,
+                    token0: value,
                   }))
                 }
               />
             </FormControl>
 
             <FormControl>
-              <FormLabel>Token </FormLabel>
+              <FormLabel>Buy Token</FormLabel>
               <AutocompleteToken
                 options={tokenOptions}
                 onChange={(value: string) =>
                   setSwapInputs((prevInputs) => ({
                     ...prevInputs,
-                    wagerToken: value,
+                    token1: value,
                   }))
                 }
               />
@@ -128,8 +135,21 @@ export default function SwapForm() {
               <FormLabel>Amount</FormLabel>
               <Input
                 type="number"
-                name="wagerAmount"
+                name="amountToken0"
                 value={swapInputs.amountToken0}
+                onChange={handleInputChange}
+                required
+                width="100%"
+                min={0}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Fee Percentage</FormLabel>
+              <Input
+                type="number"
+                name="poolFee"
+                value={swapInputs.poolFee}
                 onChange={handleInputChange}
                 required
                 width="100%"
@@ -163,6 +183,18 @@ export default function SwapForm() {
                 <SliderThumb />
               </Slider>
               <p>{swapInputs.maxSlippage}%</p>
+            </FormControl>
+
+            <FormControl display="flex" alignItems="center">
+              <FormLabel htmlFor="isStable" mb="0">
+                Is Stable Pair
+              </FormLabel>
+              <Switch
+                id="isStable"
+                colorScheme="green"
+                onChange={handleSwitchChange}
+                ml="2"
+              />
             </FormControl>
 
             <HStack spacing="4">

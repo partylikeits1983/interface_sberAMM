@@ -351,3 +351,70 @@ export const ViewLiquidityPositions = async () => {
     };
   }
 };
+
+
+export const ExecuteSwap = async (token0Address: String, token1Address: String, token0Amount: Number, fee: Number, isStable: Boolean, maxSlippage: Number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
+
+  const _fee = ethers.utils.parseEther(fee.toString());
+
+  const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
+
+  try {
+    let PID = 0;
+
+    if (isStable) {
+      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+    } else {
+      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+    }
+
+    await SberAMM.swap(PID, token0Address, token0Amount);
+
+    return {
+      status: true,
+    };
+  } catch (error) {
+    return {
+      status: false,
+    };
+  }
+};
+
+
+export const EstimateAmountOut = async (token0Address: String, token1Address: String, token0Amount: Number, fee: Number, isStable: Boolean) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
+
+  const _fee = ethers.utils.parseEther(fee.toString());
+
+
+  try {
+    let PID = 0;
+
+    if (isStable) {
+      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+    } else {
+      PID = Number(await SberAMM.getPool(token0Address, token1Address, _fee, isStable));
+    }
+
+    await SberAMM.swap(PID, token0Address, token0Amount);
+
+    return {
+      status: true,
+    };
+  } catch (error) {
+    return {
+      status: false,
+    };
+  }
+};
