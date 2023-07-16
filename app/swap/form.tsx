@@ -130,6 +130,7 @@ export default function SwapForm() {
 
   const HandleEstimateOut = async () => {
     console.log('All inputs have changed ');
+    
     const estimatedOut = await EstimateAmountOut(swapInputs);
 
     console.log(estimatedOut.estimated)

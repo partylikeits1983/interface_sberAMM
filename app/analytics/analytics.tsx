@@ -108,13 +108,13 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
           <Thead>
             <Tr>
               <Th color="white">Pool ID</Th>
-              <Th color="white">Token 0</Th>
               <Th color="white">Token 1</Th>
-              <Th color="white">Amount 0</Th>
-              <Th color="white">Amount 1</Th>
+              <Th color="white">Token 2</Th>
+              <Th color="white">Amount Token 1</Th>
+              <Th color="white">Amount Token 2</Th>
               <Th color="white">Is Stable</Th>
-              <Th color="white">Fee 0</Th>
-              <Th color="white">Fee 1</Th>
+              <Th color="white">Accrued Fees 1</Th>
+              <Th color="white">Accrued Fees 2</Th>
               <Th color="white">Fee Rate</Th>
             </Tr>
           </Thead>
@@ -130,7 +130,7 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
                 <Td color="white">{data.isStable ? 'Yes' : 'No'}</Td>
                 <Td color="white">{data.fee0.toFixed(2).toString()}</Td>
                 <Td color="white">{data.fee1.toFixed(2).toString()}</Td>
-                <Td color="white">{data.feeRate.toFixed(2).toString()}</Td>
+                <Td color="white">{(Number(data.feeRate) * 100).toFixed(2) + "%"}</Td>
               </Tr>
             ))}
           </Tbody>

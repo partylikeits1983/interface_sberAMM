@@ -422,8 +422,8 @@ export const EstimateAmountOut = async (input: SwapInputs) => {
   const amountToken0 = ethers.utils.parseEther(input.amountToken0.toString() || "0");
   const isStable = input.isStable;
   const fee = ethers.utils.parseEther(input.poolFee.toString());
+  
   // const maxSlippage = input.maxSlippage;
-
   // const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
 
   try {
