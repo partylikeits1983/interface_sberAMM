@@ -445,3 +445,24 @@ export const EstimateAmountOut = async (input: SwapInputs) => {
     };
   }
 };
+
+
+export const WithdrawFees = async (PID: number) => {
+  await updateContractAddresses();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+
+  const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
+
+  try {
+    await SberAMM.withdraw(PID);
+    return {
+      status: true
+    };
+  } catch (error) {
+    return {
+      status: false
+    };
+  }
+};

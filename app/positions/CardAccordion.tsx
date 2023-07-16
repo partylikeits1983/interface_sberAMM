@@ -15,6 +15,10 @@ import {
   Box,
   HStack,
   useBreakpointValue,
+  Table,
+  Tbody,
+  Tr,
+  Td,
 } from '@chakra-ui/react';
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
@@ -107,130 +111,97 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
           </AccordionButton>
         </h2>
         <AccordionPanel pb={4}>
-          <Flex
-            direction={useBreakpointValue({ base: 'column', md: 'row' })}
-            alignItems={useBreakpointValue({
-              base: 'stretch',
-              md: 'flex-start',
-            })}
-          >
-            <Stack
-              spacing={2}
-              width={useBreakpointValue({ base: '100%', md: '50%' })}
-            >
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Token 0
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.token0)}</Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() => handleCopyAddress(card.token0)}
-                  />
-                </Flex>
-              </Stack>
+        <Flex
+  direction={useBreakpointValue({ base: 'column', md: 'row' })}
+  alignItems={useBreakpointValue({ base: 'stretch', md: 'center' })} // changed this line
+  justifyContent="center" // added this line
+>
+<Stack
+  spacing={2}
+  width={useBreakpointValue({ base: '100%', md: '300%' })}
+  align="center"
+>
 
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Token 1
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{formatAddress(card.token1)}</Text>
-                  <CopyIcon
-                    ml={2}
-                    cursor="pointer"
-                    onClick={() => handleCopyAddress(card.token1)}
-                  />
-                </Flex>
-              </Stack>
+              <SidePanel card={card} isPendingApproval={false}></SidePanel>
 
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Token 0
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.poolBalance0)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Token 1
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.poolBalance1)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  User balance token 0
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.poolBalance0)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  User balance token 1
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.poolBalance1)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  User fees token 0
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.userFees0)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  User fees token 1
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.userFees1)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Pool Fee Rate
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">
-                    {ethers.utils.formatEther(card.poolFeeRate)}
-                  </Text>
-                </Flex>
-              </Stack>
-
-              <Stack spacing={0}>
-                <Text fontSize="sm" fontWeight="bold" color="gray.500">
-                  Is stable pool
-                </Text>
-                <Flex alignItems="center">
-                  <Text fontSize="md">{card.isStable.toString()}</Text>
-                </Flex>
-              </Stack>
+              <Table size="sm" w="100%" mx="auto"> 
+                <Tbody>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      Token 0
+                    </Td>
+                    <Td>
+                      {formatAddress(card.token0)}
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() => handleCopyAddress(card.token0)}
+                      />
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      Token 1
+                    </Td>
+                    <Td>
+                      {formatAddress(card.token1)}
+                      <CopyIcon
+                        ml={2}
+                        cursor="pointer"
+                        onClick={() => handleCopyAddress(card.token1)}
+                      />
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      Token 0 Balance
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.poolBalance0)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      Token 1 Balance
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.poolBalance1)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      User balance token 0
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.userBalance0)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      User balance token 1
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.userBalance1)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      User fees token 0
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.userFees0)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      User fees token 1
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.userFees1)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      Pool Fee Rate
+                    </Td>
+                    <Td>{ethers.utils.formatEther(card.poolFeeRate)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td fontWeight="bold" color="gray.500">
+                      Is stable pool
+                    </Td>
+                    <Td>{card.isStable.toString()}</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
             </Stack>
 
             <Box

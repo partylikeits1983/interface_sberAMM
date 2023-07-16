@@ -247,7 +247,7 @@ export default function SwapForm() {
                   colorScheme="green"
                 >
                   <Stack direction="row" spacing="10px">
-                    <Radio value="0.03">3%</Radio>
+                    <Radio value="0.01">1%</Radio>
                     <Radio value="0.0005">0.05%</Radio>
                     <Radio value="0.0003">0.03%</Radio>
                     <Radio value="custom">Custom</Radio>
