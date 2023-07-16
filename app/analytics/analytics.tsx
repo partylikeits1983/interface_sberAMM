@@ -130,7 +130,9 @@ const Analytics: FC<AnalyticsProps> = ({ useAPI, handleToggle }) => {
                 <Td color="white">{data.isStable ? 'Yes' : 'No'}</Td>
                 <Td color="white">{data.fee0.toFixed(2).toString()}</Td>
                 <Td color="white">{data.fee1.toFixed(2).toString()}</Td>
-                <Td color="white">{(Number(data.feeRate) * 100).toFixed(2) + "%"}</Td>
+                <Td color="white">
+                  {(Number(data.feeRate) * 100).toFixed(2) + '%'}
+                </Td>
               </Tr>
             ))}
           </Tbody>

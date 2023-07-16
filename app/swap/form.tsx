@@ -34,11 +34,11 @@ const {
 import tokenOptions from './autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
 
-
 export default function SwapForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
-  const [estimatedAmountOut, setEstimatedAmountOut] = useState("Pool Not Found");
+  const [estimatedAmountOut, setEstimatedAmountOut] =
+    useState('Pool Not Found');
   const [allInputsHaveChanged, setAllInputsHaveChanged] = useState(false);
 
   const HandleClickApprove = async () => {
@@ -50,7 +50,7 @@ export default function SwapForm() {
   const HandleClickImplementSwap = async () => {
     console.log(swapInputs);
     setIsLoadingCreateWager(true);
-    console.log("here")
+    console.log('here');
     await ExecuteSwap(swapInputs);
     setIsLoadingCreateWager(false);
   };
@@ -68,7 +68,7 @@ export default function SwapForm() {
     isCustomFee: boolean;
     maxSlippage: number;
   }
-  
+
   const initialSwapInputs: SwapInputs = {
     token0: '',
     token1: '',
@@ -78,14 +78,14 @@ export default function SwapForm() {
     isCustomFee: false,
     maxSlippage: 0,
   };
-  
+
   const [swapInputs, setSwapInputs] = useState<SwapInputs>(initialSwapInputs);
-  
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ): void => {
     const { name, value } = event.target;
-  
+
     // handle all other changes except poolFee and customPoolFee
     if (name !== 'poolFee' && name !== 'customPoolFee') {
       setSwapInputs((prevInputs) => ({
@@ -94,7 +94,7 @@ export default function SwapForm() {
       }));
     }
   };
-  
+
   const handleRadioChange = (value: string): void => {
     if (value === 'custom') {
       setSwapInputs((prevInputs) => ({
@@ -109,10 +109,12 @@ export default function SwapForm() {
       }));
     }
   };
-  
-  const handleCustomFeeChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+
+  const handleCustomFeeChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
     const { value } = event.target;
-  
+
     if (swapInputs.isCustomFee) {
       setSwapInputs((prevInputs) => ({
         ...prevInputs,
@@ -120,9 +122,8 @@ export default function SwapForm() {
       }));
     }
   };
-  
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     if (allInputsHaveChanged) {
       // HandleEstimateAmountOut();
     }
@@ -133,7 +134,7 @@ export default function SwapForm() {
 
     const estimatedOut = await EstimateAmountOut(swapInputs);
 
-    console.log(estimatedOut.estimated)
+    console.log(estimatedOut.estimated);
     setEstimatedAmountOut(estimatedOut.estimated.toFixed(2).toString());
     console.log('EstimatedOut', estimatedOut.estimated);
     console.log('type', typeof estimatedOut.estimated);
@@ -142,10 +143,16 @@ export default function SwapForm() {
   useEffect(() => {
     console.log(swapInputs);
     // The check condition can vary based on your requirements. The following is an example.
-    const keysToCheck: Array<keyof SwapInputs> = ['token0', 'token1', 'amountToken0']; // Replace with the keys you want to check
+    const keysToCheck: Array<keyof SwapInputs> = [
+      'token0',
+      'token1',
+      'amountToken0',
+    ]; // Replace with the keys you want to check
 
-    const allChanged = keysToCheck.every((key) => swapInputs[key] !== initialSwapInputs[key]);
-    
+    const allChanged = keysToCheck.every(
+      (key) => swapInputs[key] !== initialSwapInputs[key],
+    );
+
     if (allChanged) {
       setAllInputsHaveChanged(true);
       HandleEstimateOut();
@@ -222,31 +229,47 @@ export default function SwapForm() {
             </FormControl>
 
             <FormControl>
-  <FormLabel marginBottom="20px">Fee Percentage</FormLabel>
-  <HStack position="relative" direction="row" spacing="10px" alignItems="center">
-    <RadioGroup name="poolFee" value={swapInputs.isCustomFee ? 'custom' : String(swapInputs.poolFee)} onChange={handleRadioChange} colorScheme="green">
-      <Stack direction="row" spacing="10px">
-        <Radio value="0.03">3%</Radio>
-        <Radio value="0.0005">0.05%</Radio>
-        <Radio value="0.0003">0.03%</Radio>
-        <Radio value="custom">Custom</Radio>
-      </Stack>
-    </RadioGroup>
-    <Box position="absolute" right={0} visibility={swapInputs.isCustomFee ? 'visible' : 'hidden'}>
-      <Input
-        type="number"
-        name="customPoolFee"
-        onChange={handleCustomFeeChange}
-        required
-        width="100px"
-        min={0}
-        marginLeft="0px"
-      />
-    </Box>
-  </HStack>
-</FormControl>
-
-
+              <FormLabel marginBottom="20px">Fee Percentage</FormLabel>
+              <HStack
+                position="relative"
+                direction="row"
+                spacing="10px"
+                alignItems="center"
+              >
+                <RadioGroup
+                  name="poolFee"
+                  value={
+                    swapInputs.isCustomFee
+                      ? 'custom'
+                      : String(swapInputs.poolFee)
+                  }
+                  onChange={handleRadioChange}
+                  colorScheme="green"
+                >
+                  <Stack direction="row" spacing="10px">
+                    <Radio value="0.03">3%</Radio>
+                    <Radio value="0.0005">0.05%</Radio>
+                    <Radio value="0.0003">0.03%</Radio>
+                    <Radio value="custom">Custom</Radio>
+                  </Stack>
+                </RadioGroup>
+                <Box
+                  position="absolute"
+                  right={0}
+                  visibility={swapInputs.isCustomFee ? 'visible' : 'hidden'}
+                >
+                  <Input
+                    type="number"
+                    name="customPoolFee"
+                    onChange={handleCustomFeeChange}
+                    required
+                    width="100px"
+                    min={0}
+                    marginLeft="0px"
+                  />
+                </Box>
+              </HStack>
+            </FormControl>
 
             <FormControl position="relative">
               <FormLabel marginBottom="20px">
