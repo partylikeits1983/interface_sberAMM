@@ -10,12 +10,13 @@ interface CardSidePanelProps {
 }
 
 const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
-  const withdrawLiquidity = () => {
-    WithdrawLiquidity(card);
+  const HandleWithdrawLiquidity = async () => {
+    console.log(card.PID)
+    await WithdrawLiquidity(card.PID);
   };
 
-  const withdrawFees = () => {
-    WithdrawFees(card);
+  const HandleWithdrawFees = async () => {
+    await WithdrawFees(card.PID);
   };
 
   return (
@@ -29,7 +30,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
     >
       <Button
         colorScheme="green" // Change colorScheme to "green"
-        onClick={withdrawLiquidity}
+        onClick={HandleWithdrawLiquidity}
         isLoading={isPendingApproval}
         style={{ marginRight: '10px' }} // Add margin to create spacing between buttons
       >
@@ -37,7 +38,7 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
       </Button>
       <Button
         colorScheme="green" // Change colorScheme to "green"
-        onClick={withdrawFees}
+        onClick={HandleWithdrawFees}
         isLoading={isPendingApproval}
       >
         Withdraw Fees
