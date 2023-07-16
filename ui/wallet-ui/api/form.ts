@@ -478,7 +478,7 @@ export const WithdrawFees = async (PID: number) => {
   const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
 
   try {
-    await SberAMM.withdraw(PID);
+    await SberAMM.WithdrawFees(PID);
     return {
       status: true
     };
