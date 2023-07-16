@@ -16,7 +16,7 @@ import {
   SliderThumb,
   Tooltip,
   Switch,
-  Select,
+  Spacer,
   Text,
   RadioGroup,
   Radio,
@@ -130,7 +130,7 @@ export default function SwapForm() {
 
   const HandleEstimateOut = async () => {
     console.log('All inputs have changed ');
-    
+
     const estimatedOut = await EstimateAmountOut(swapInputs);
 
     console.log(estimatedOut.estimated)
@@ -222,32 +222,34 @@ export default function SwapForm() {
             </FormControl>
 
             <FormControl>
-  <FormLabel>Fee Percentage</FormLabel>
-  <HStack spacing="24px">
-    <RadioGroup name="poolFee" value={swapInputs.isCustomFee ? 'custom' : String(swapInputs.poolFee)} onChange={handleRadioChange}>
-      <Stack direction="row">
+  <FormLabel marginBottom="20px">Fee Percentage</FormLabel>
+  <HStack position="relative" direction="row" spacing="10px" alignItems="center">
+    <RadioGroup name="poolFee" value={swapInputs.isCustomFee ? 'custom' : String(swapInputs.poolFee)} onChange={handleRadioChange} colorScheme="green">
+      <Stack direction="row" spacing="10px">
         <Radio value="0.03">3%</Radio>
-        <Radio value="0.005">0.05%</Radio>
+        <Radio value="0.0005">0.05%</Radio>
         <Radio value="0.0003">0.03%</Radio>
         <Radio value="custom">Custom</Radio>
       </Stack>
     </RadioGroup>
-    {swapInputs.isCustomFee && (
+    <Box position="absolute" right={0} visibility={swapInputs.isCustomFee ? 'visible' : 'hidden'}>
       <Input
         type="number"
         name="customPoolFee"
         onChange={handleCustomFeeChange}
         required
-        width="100%"
+        width="100px"
         min={0}
+        marginLeft="0px"
       />
-    )}
+    </Box>
   </HStack>
 </FormControl>
 
 
+
             <FormControl position="relative">
-              <FormLabel>
+              <FormLabel marginBottom="20px">
                 Max Slippage{' '}
                 <Box as="span" width="4em" textAlign="right">
                   {swapInputs.maxSlippage}%
@@ -285,7 +287,7 @@ export default function SwapForm() {
             </FormControl>
 
             <FormControl display="flex" alignItems="center">
-              <FormLabel htmlFor="isStable" mb="0">
+              <FormLabel marginBottom="20px" htmlFor="isStable" mb="0">
                 Is Stable Pair
               </FormLabel>
               <Switch
