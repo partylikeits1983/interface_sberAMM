@@ -338,7 +338,6 @@ export const ViewLiquidityPositions = async () => {
 
         Positions.push(Position);
       }
-      console.log('HERE');
       console.log(Positions);
     }
 
@@ -358,8 +357,10 @@ interface SwapInputs {
   amountToken0: number;
   isStable: boolean;
   poolFee: number;
+  isCustomFee: boolean;
   maxSlippage: number;
 }
+
 // token0Address: String, token1Address: String, token0Amount: Number, fee: Number, isStable: Boolean, maxSlippage: Number
 export const ExecuteSwap = async (input: SwapInputs) => {
   await updateContractAddresses();
@@ -369,26 +370,30 @@ export const ExecuteSwap = async (input: SwapInputs) => {
 
   const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
 
-
   const token0 = input.token0;
   const token1 = input.token1;
-  const amountToken0 = ethers.utils.parseEther(input.amountToken0);
+  const amountToken0 = ethers.utils.parseEther(input.amountToken0.toString() || "0");
   const isStable = input.isStable;
-  const fee = ethers.utils.parseEther(input.poolFee);
+  const fee = ethers.utils.parseEther(input.poolFee.toString());
   // const maxSlippage = input.maxSlippage;
 
-  const _fee = ethers.utils.parseEther(fee.toString());
+  // const _fee = ethers.utils.parseEther(fee.toString());
 
   // const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
 
   try {
-    let PID = 0;
+    let PID;
 
     if (isStable) {
-      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, fee, isStable));
     } else {
-      PID = Number(await SberAMM.getPool(token0, token1, _fee, isStable));
+      PID = Number(await SberAMM.getPool(token0, token1, fee, isStable));
     }
+
+    console.log(isStable)
+    console.log(SberAMM.address);
+    console.log(token0);
+    console.log(PID)
 
     await SberAMM.swap(PID, token0, amountToken0);
 
@@ -410,11 +415,13 @@ export const EstimateAmountOut = async (input: SwapInputs) => {
 
   const SberAMM = new ethers.Contract(SberAMMaddress, AMM_ABI, signer);
 
+  console.log("Estimate")
+
   const token0 = input.token0;
   const token1 = input.token1;
-  const amountToken0 = ethers.utils.parseEther(input.amountToken0);
+  const amountToken0 = ethers.utils.parseEther(input.amountToken0.toString() || "0");
   const isStable = input.isStable;
-  const fee = ethers.utils.parseEther(input.poolFee);
+  const fee = ethers.utils.parseEther(input.poolFee.toString());
   // const maxSlippage = input.maxSlippage;
 
   // const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used

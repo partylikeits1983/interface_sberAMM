@@ -16,7 +16,10 @@ import {
   SliderThumb,
   Tooltip,
   Switch,
+  Select,
   Text,
+  RadioGroup,
+  Radio,
 } from '@chakra-ui/react';
 
 import { InfoOutlineIcon } from '@chakra-ui/icons';
@@ -24,26 +27,18 @@ import { InfoOutlineIcon } from '@chakra-ui/icons';
 const { ethers } = require('ethers');
 const {
   EstimateAmountOut,
-  ExectuteSwap,
+  ExecuteSwap,
   Approve,
 } = require('ui/wallet-ui/api/form');
 
 import tokenOptions from './autocomplete-token-options';
 import AutocompleteToken from './autocomplete-token';
 
-interface SwapInputs {
-  token0: string;
-  token1: string;
-  amountToken0: number;
-  isStable: boolean;
-  poolFee: number;
-  maxSlippage: number;
-}
 
 export default function SwapForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingCreateWager, setIsLoadingCreateWager] = useState(false);
-  const [estimatedAmountOut, setEstimatedAmountOut] = useState(0);
+  const [estimatedAmountOut, setEstimatedAmountOut] = useState("Pool Not Found");
   const [allInputsHaveChanged, setAllInputsHaveChanged] = useState(false);
 
   const HandleClickApprove = async () => {
@@ -55,7 +50,8 @@ export default function SwapForm() {
   const HandleClickImplementSwap = async () => {
     console.log(swapInputs);
     setIsLoadingCreateWager(true);
-    await ExectuteSwap(swapInputs);
+    console.log("here")
+    await ExecuteSwap(swapInputs);
     setIsLoadingCreateWager(false);
   };
 
@@ -63,38 +59,81 @@ export default function SwapForm() {
     setEstimatedAmountOut(await EstimateAmountOut(swapInputs));
   } */
 
-  const initialSwapInputs = {
+  interface SwapInputs {
+    token0: string;
+    token1: string;
+    amountToken0: number;
+    isStable: boolean;
+    poolFee: number;
+    isCustomFee: boolean;
+    maxSlippage: number;
+  }
+  
+  const initialSwapInputs: SwapInputs = {
     token0: '',
     token1: '',
     amountToken0: 0,
     isStable: false,
     poolFee: 0,
+    isCustomFee: false,
     maxSlippage: 0,
   };
-
+  
   const [swapInputs, setSwapInputs] = useState<SwapInputs>(initialSwapInputs);
-
+  
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ): void => {
     const { name, value } = event.target;
-    setSwapInputs((prevInputs) => ({
-      ...prevInputs,
-      [name]: value,
-    }));
+  
+    // handle all other changes except poolFee and customPoolFee
+    if (name !== 'poolFee' && name !== 'customPoolFee') {
+      setSwapInputs((prevInputs) => ({
+        ...prevInputs,
+        [name]: value,
+      }));
+    }
   };
+  
+  const handleRadioChange = (value: string): void => {
+    if (value === 'custom') {
+      setSwapInputs((prevInputs) => ({
+        ...prevInputs,
+        isCustomFee: true,
+      }));
+    } else {
+      setSwapInputs((prevInputs) => ({
+        ...prevInputs,
+        poolFee: parseFloat(value),
+        isCustomFee: false,
+      }));
+    }
+  };
+  
+  const handleCustomFeeChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { value } = event.target;
+  
+    if (swapInputs.isCustomFee) {
+      setSwapInputs((prevInputs) => ({
+        ...prevInputs,
+        poolFee: parseFloat(value),
+      }));
+    }
+  };
+  
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (allInputsHaveChanged) {
       // HandleEstimateAmountOut();
     }
-  }, [swapInputs]);
+  }, [swapInputs]); */
 
   const HandleEstimateOut = async () => {
     console.log('All inputs have changed ');
     const estimatedOut = await EstimateAmountOut(swapInputs);
 
-    setEstimatedAmountOut(estimatedOut.estimated);
+    console.log(estimatedOut.estimated)
+    setEstimatedAmountOut(estimatedOut.estimated.toFixed(2).toString());
     console.log('EstimatedOut', estimatedOut.estimated);
     console.log('type', typeof estimatedOut.estimated);
   };
@@ -102,10 +141,10 @@ export default function SwapForm() {
   useEffect(() => {
     console.log(swapInputs);
     // The check condition can vary based on your requirements. The following is an example.
-    const allChanged = Object.entries(swapInputs).every(
-      ([key, value]) => value !== initialSwapInputs[key as keyof SwapInputs],
-    );
+    const keysToCheck: Array<keyof SwapInputs> = ['token0', 'token1', 'amountToken0']; // Replace with the keys you want to check
 
+    const allChanged = keysToCheck.every((key) => swapInputs[key] !== initialSwapInputs[key]);
+    
     if (allChanged) {
       setAllInputsHaveChanged(true);
       HandleEstimateOut();
@@ -182,17 +221,29 @@ export default function SwapForm() {
             </FormControl>
 
             <FormControl>
-              <FormLabel>Fee Percentage</FormLabel>
-              <Input
-                type="number"
-                name="poolFee"
-                value={swapInputs.poolFee}
-                onChange={handleInputChange}
-                required
-                width="100%"
-                min={0}
-              />
-            </FormControl>
+  <FormLabel>Fee Percentage</FormLabel>
+  <HStack spacing="24px">
+    <RadioGroup name="poolFee" value={swapInputs.isCustomFee ? 'custom' : String(swapInputs.poolFee)} onChange={handleRadioChange}>
+      <Stack direction="row">
+        <Radio value="0.03">3%</Radio>
+        <Radio value="0.005">0.05%</Radio>
+        <Radio value="0.0003">0.03%</Radio>
+        <Radio value="custom">Custom</Radio>
+      </Stack>
+    </RadioGroup>
+    {swapInputs.isCustomFee && (
+      <Input
+        type="number"
+        name="customPoolFee"
+        onChange={handleCustomFeeChange}
+        required
+        width="100%"
+        min={0}
+      />
+    )}
+  </HStack>
+</FormControl>
+
 
             <FormControl position="relative">
               <FormLabel>
@@ -244,7 +295,7 @@ export default function SwapForm() {
               />
             </FormControl>
             <FormLabel htmlFor="isStable" mb="0">
-              Estimated Amount Out: {estimatedAmountOut.toFixed(2).toString()}
+              Estimated Amount Out: {estimatedAmountOut}
             </FormLabel>
 
             <HStack spacing="4">
