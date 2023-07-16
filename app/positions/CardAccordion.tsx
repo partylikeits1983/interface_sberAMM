@@ -111,20 +111,19 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
           </AccordionButton>
         </h2>
         <AccordionPanel pb={4}>
-        <Flex
-  direction={useBreakpointValue({ base: 'column', md: 'row' })}
-  alignItems={useBreakpointValue({ base: 'stretch', md: 'center' })} // changed this line
-  justifyContent="center" // added this line
->
-<Stack
-  spacing={2}
-  width={useBreakpointValue({ base: '100%', md: '300%' })}
-  align="center"
->
-
+          <Flex
+            direction={useBreakpointValue({ base: 'column', md: 'row' })}
+            alignItems={useBreakpointValue({ base: 'stretch', md: 'center' })} // changed this line
+            justifyContent="center" // added this line
+          >
+            <Stack
+              spacing={2}
+              width={useBreakpointValue({ base: '100%', md: '300%' })}
+              align="center"
+            >
               <SidePanel card={card} isPendingApproval={false}></SidePanel>
 
-              <Table size="sm" w="100%" mx="auto"> 
+              <Table size="sm" w="100%" mx="auto">
                 <Tbody>
                   <Tr>
                     <Td fontWeight="bold" color="gray.500">

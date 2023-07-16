@@ -19,31 +19,30 @@ const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   };
 
   return (
-<div
-  style={{
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }}
->
-  <Button
-    colorScheme="green" // Change colorScheme to "green"
-    onClick={withdrawLiquidity}
-    isLoading={isPendingApproval}
-    style={{ marginRight: '10px' }} // Add margin to create spacing between buttons
-  >
-    Withdraw Liquidity
-  </Button>
-  <Button
-    colorScheme="green" // Change colorScheme to "green"
-    onClick={withdrawFees}
-    isLoading={isPendingApproval}
-  >
-    Withdraw Fees
-  </Button>
-</div>
-
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Button
+        colorScheme="green" // Change colorScheme to "green"
+        onClick={withdrawLiquidity}
+        isLoading={isPendingApproval}
+        style={{ marginRight: '10px' }} // Add margin to create spacing between buttons
+      >
+        Withdraw Liquidity
+      </Button>
+      <Button
+        colorScheme="green" // Change colorScheme to "green"
+        onClick={withdrawFees}
+        isLoading={isPendingApproval}
+      >
+        Withdraw Fees
+      </Button>
+    </div>
   );
 };
 
