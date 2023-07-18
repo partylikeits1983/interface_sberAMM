@@ -148,17 +148,17 @@ export default function ChallengeForm() {
             </FormControl>
 
             <FormControl>
-  <FormLabel>Fee ({formInputs.fee}%)</FormLabel>
-  <Input
-    type="number"
-    name="fee"
-    value={formInputs.fee}
-    onChange={handleInputChange}
-    required
-    width="100%"
-    min={0}
-  />
-</FormControl>
+              <FormLabel>Fee ({formInputs.fee}%)</FormLabel>
+              <Input
+                type="number"
+                name="fee"
+                value={formInputs.fee}
+                onChange={handleInputChange}
+                required
+                width="100%"
+                min={0}
+              />
+            </FormControl>
 
             <FormControl display="flex" alignItems="center">
               <FormLabel mb="0">Is Stable Pair</FormLabel>

@@ -321,7 +321,9 @@ export default function SwapForm() {
               />
             </FormControl>
             <FormLabel htmlFor="isStable" mb="0">
-              Estimated Amount Out: {estimatedAmountOut}
+              {estimatedAmountOut !== '0.00'
+                ? `Estimated Amount Out: ${estimatedAmountOut}`
+                : 'Estimated Amount Out: Not enough liquidity in pool'}
             </FormLabel>
 
             <HStack spacing="4">

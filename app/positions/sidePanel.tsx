@@ -11,7 +11,7 @@ interface CardSidePanelProps {
 
 const SidePanel: FC<CardSidePanelProps> = ({ card, isPendingApproval }) => {
   const HandleWithdrawLiquidity = async () => {
-    console.log(card.PID)
+    console.log(card.PID);
     await WithdrawLiquidity(card.PID);
   };
 

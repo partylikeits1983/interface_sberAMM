@@ -25,7 +25,6 @@ import { CopyIcon } from '@chakra-ui/icons';
 
 import crypto from 'crypto';
 
-
 import copyIconFeedback from 'ui/copyIconFeedback';
 
 import SidePanel from './sidePanel';
@@ -96,7 +95,11 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
   }
 
   function uniqueJazzicon(position: LiquidityPosition) {
-    const uniquePositionVar = position.PID.toString() + position.token0 + position.token1 + position.isStable.toString();
+    const uniquePositionVar =
+      position.PID.toString() +
+      position.token0 +
+      position.token1 +
+      position.isStable.toString();
     return uniquePositionVar;
   }
 

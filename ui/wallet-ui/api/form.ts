@@ -235,6 +235,8 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
   const amount1 = ethers.utils.parseUnits(inputs.amount1.toString(), 18);
 
   const fee = ethers.utils.parseUnits(inputs.fee.toString(), 16);
+  console.log("FEE", Number(fee));
+
   const isStable = inputs.isStable;
 
   const PID = await SberAMM.getPool(
@@ -250,7 +252,7 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
 
   try {
     if (PID == 0) {
-      alert('creating new pair');
+      alert('Creating new pair');
       // create pair because it doesn't exist
       const newPID = await SberAMM.createPair(
         addressToken0,
@@ -260,8 +262,15 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
       );
       await newPID.wait();
 
-      const tx = await SberAMM.deposit(PID, amount0, amount1);
-      await tx.wait();
+      alert('Pair Created, Click the Add Liquidity button again');
+ 
+      try {
+        const tx = await SberAMM.deposit(PID, amount0, amount1);
+        await tx.wait(); 
+      } catch (error) {
+        console.log(error)
+      }
+
     } else {
       const tx = await SberAMM.deposit(PID, amount0, amount1);
       await tx.wait();
@@ -426,6 +435,8 @@ export const EstimateAmountOut = async (input: SwapInputs) => {
   
   // const maxSlippage = input.maxSlippage;
   // const _slippage = ethers.utils.parseEther(maxSlippage.toString()); // currently not used
+
+  console.log(token0, token1, isStable, amountToken0, fee)
 
   try {
     let PID;
