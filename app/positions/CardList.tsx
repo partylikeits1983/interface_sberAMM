@@ -68,10 +68,6 @@ const CardList = () => {
         setIsLoading(true);
         const data = await ViewLiquidityPositions();
 
-        console.log('Inside CardList');
-        console.log(data);
-        console.log(typeof data);
-
         if (data && data.Positions && Array.isArray(data.Positions)) {
           setCards(data.Positions.reverse()); // reverse to show newest first
         } else {
@@ -87,12 +83,10 @@ const CardList = () => {
 
   const sortedCards = [...cards].sort((a, b) => {
     switch (sortValue) {
-      case 'isPending':
+      case 'isStable':
         return a.isStable === b.isStable ? 0 : a.isStable ? -1 : 1;
-      case 'wagerAmountAsc':
-        return a.poolBalance0 - b.poolBalance0;
-      case 'wagerAmountDesc':
-        return b.poolBalance0 - a.poolBalance0;
+      case 'PID':
+        return a.PID - b.PID;
       default:
         return 0;
     }
@@ -124,7 +118,7 @@ const CardList = () => {
           ))
         ) : (
           <Text fontSize="xl" color="gray.500">
-            You haven&apos;t created any liquidity positions yet.
+            You haven&apos;t opened any liquidity positions yet.
           </Text>
         )}
       </Box>

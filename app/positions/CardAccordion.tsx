@@ -23,6 +23,9 @@ import {
 import Identicon from 'ui/IdenticonGames';
 import { CopyIcon } from '@chakra-ui/icons';
 
+import crypto from 'crypto';
+
+
 import copyIconFeedback from 'ui/copyIconFeedback';
 
 import SidePanel from './sidePanel';
@@ -92,6 +95,16 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
     return sign + coefficients[0] + zeros;
   }
 
+  function uniqueJazzicon(position: LiquidityPosition) {
+    const uniquePositionVar = position.PID.toString() + position.token0 + position.token1 + position.isStable.toString();
+    return uniquePositionVar;
+  }
+
+  function generateHash(input: string): string {
+    const hash = crypto.createHash('sha256').update(input).digest('hex');
+    return hash.slice(0, 42);
+  }
+
   return (
     <Accordion allowToggle>
       <AccordionItem>
@@ -99,7 +112,7 @@ const CardAccordion: React.FC<CardAccordionProps> = ({ card, account }) => {
           <AccordionButton>
             <Flex justify="space-between" alignItems="center" w="full">
               <HStack spacing="1.5rem">
-                <Identicon account={card.token0} />
+                <Identicon account={generateHash(uniqueJazzicon(card))} />
                 <Text fontSize="md">{`Pool ID: ${card.PID.toString()}`}</Text>
               </HStack>
 
