@@ -38,7 +38,7 @@ interface FormInputs {
   isStable: boolean;
 }
 
-export default function ChallengeForm() {
+export default function DepositForm() {
   const [isLoadingApproval, setIsLoadingApproval] = useState(false);
   const [isLoadingDepositLiquidity, setIsLoadingDepositLiquidity] =
     useState(false);

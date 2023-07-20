@@ -1,4 +1,4 @@
-import ChallengeForm from './form';
+import DepositForm from './form';
 
 export default function Page() {
   return (
@@ -6,7 +6,7 @@ export default function Page() {
       <div className="prose prose-sm prose-invert max-w-none space-y-9">
         <h1 className="text-xl font-bold">Deposit Liquidity</h1>
 
-        <ChallengeForm />
+        <DepositForm />
       </div>
     </div>
   );
