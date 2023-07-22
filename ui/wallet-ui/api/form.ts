@@ -252,7 +252,7 @@ export const DepositLiquidity = async (inputs: FormInputs) => {
 
   try {
     if (PID == 0) {
-      alert('Creating new pair');
+      alert('Creating new pair, refresh the page and click add liquidity again after sending this tx');
       // create pair because it doesn't exist
       const newPID = await SberAMM.createPair(
         addressToken0,
